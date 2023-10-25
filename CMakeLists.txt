@@ -3,5 +3,5 @@ project(Game_chess)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Game_chess main.cpp Tools/Controller.h Tools/Controller.cpp Tools/Clock.h Tools/Clock.cpp
-        Tools/Player.h Tools/Player.cpp)
+add_executable(Game_chess main.cpp Tools/Controller.h Tools/Controller.cpp
+        Tools/Player.h Tools/Player.cpp Tools/Figures.cpp Tools/Figures.h)
