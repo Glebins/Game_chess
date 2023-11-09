@@ -31,7 +31,7 @@ private:
     char** game_field;
     std::string game_history;
 
-    std::pair<Player, List_figures> get_figure_by_position(std::string position);
+    std::pair<Player, Figures> get_figure_by_position(std::string position);
 
 public:
     Controller() = default;

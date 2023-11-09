@@ -5,25 +5,94 @@
 #include <cstring>
 #include <vector>
 
-enum class List_figures {
-    King,
-    Queen,
-    Rook,
-    Bishop,
-    Knight,
-    Pawn
-};
-
 class Figures {
 
 public:
-    static List_figures symbol_to_figure(char symb);
-    static char figure_to_symbol(List_figures figure);
+    virtual Figures symbol_to_figure(char symbol);
+    virtual char figure_to_symbol(Figures figure);
 
-    static std::vector<std::string> array_moves(List_figures figure, std::string position);
-    static bool can_do_move(List_figures figure, std::string position, std::string move);
+    virtual std::vector<std::string> array_moves(Figures figure, std::string position);
+    virtual bool can_do_move(Figures figure, std::string position, std::string move);
 
-    static std::string get_name_of_figure(List_figures figure);
+    virtual std::string get_name_of_figure();
+
+};
+
+class King : Figures {
+
+public:
+    Figures symbol_to_figure(char symbol) override;
+    char figure_to_symbol(Figures figure) override;
+
+    std::vector<std::string> array_moves(Figures figure, std::string position) override;
+    bool can_do_move(Figures figure, std::string position, std::string move) override;
+
+    std::string get_name_of_figure() override { return "King"; }
+
+};
+
+class Queen : Figures {
+
+public:
+    Figures symbol_to_figure(char symbol) override;
+    char figure_to_symbol(Figures figure) override;
+
+    std::vector<std::string> array_moves(Figures figure, std::string position) override;
+    bool can_do_move(Figures figure, std::string position, std::string move) override;
+
+    std::string get_name_of_figure() override { return "Queen"; }
+
+};
+
+class Rook : Figures {
+
+public:
+    Figures symbol_to_figure(char symbol) override;
+    char figure_to_symbol(Figures figure) override;
+
+    std::vector<std::string> array_moves(Figures figure, std::string position) override;
+    bool can_do_move(Figures figure, std::string position, std::string move) override;
+
+    std::string get_name_of_figure() override { return "Rook"; }
+
+};
+
+class Bishop : Figures {
+
+public:
+    Figures symbol_to_figure(char symbol) override;
+    char figure_to_symbol(Figures figure) override;
+
+    std::vector<std::string> array_moves(Figures figure, std::string position) override;
+    bool can_do_move(Figures figure, std::string position, std::string move) override;
+
+    std::string get_name_of_figure() override { return "Bishop"; }
+
+};
+
+class Knight : Figures {
+
+public:
+    Figures symbol_to_figure(char symbol) override;
+    char figure_to_symbol(Figures figure) override;
+
+    std::vector<std::string> array_moves(Figures figure, std::string position) override;
+    bool can_do_move(Figures figure, std::string position, std::string move) override;
+
+    std::string get_name_of_figure() override { return "Knight"; }
+
+};
+
+class Pawn : Figures {
+
+public:
+    Figures symbol_to_figure(char symbol) override;
+    char figure_to_symbol(Figures figure) override;
+
+    std::vector<std::string> array_moves(Figures figure, std::string position) override;
+    bool can_do_move(Figures figure, std::string position, std::string move) override;
+
+    std::string get_name_of_figure() override { return "Pawn"; }
 
 };
 
