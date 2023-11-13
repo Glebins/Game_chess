@@ -7,6 +7,9 @@
 
 class Figures {
 
+private:
+    int color;
+
 public:
     virtual Figures symbol_to_figure(char symbol);
     virtual char figure_to_symbol(Figures figure);

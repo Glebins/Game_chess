@@ -28,7 +28,7 @@ private:
     Player player_whites;
     Player player_blacks;
 
-    char** game_field;
+    Figures** game_field;
     std::string game_history;
 
     std::pair<Player, Figures> get_figure_by_position(std::string position);
