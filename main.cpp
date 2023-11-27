@@ -9,7 +9,7 @@ int main()
 
     Pawn p;
 
-    std::cout << p.get_name_of_figure();
+    std::cout << std::endl << p.get_name_of_figure();
 
     return 0;
 }

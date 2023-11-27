@@ -11,13 +11,15 @@ private:
     int color;
 
 public:
-    virtual Figures symbol_to_figure(char symbol);
-    virtual char figure_to_symbol(Figures figure);
+    virtual Figures symbol_to_figure(char symbol) {};
+    virtual char figure_to_symbol(Figures figure) {};
 
-    virtual std::vector<std::string> array_moves(Figures figure, std::string position);
-    virtual bool can_do_move(Figures figure, std::string position, std::string move);
+    virtual std::vector<std::string> array_moves(Figures figure, std::string position) {};
+    virtual bool can_do_move(Figures figure, std::string position, std::string move) {};
 
-    virtual std::string get_name_of_figure();
+    virtual std::string get_name_of_figure() {};
+
+    virtual ~Figures() = default;
 
 };
 
