@@ -34,7 +34,8 @@ private:
     std::pair<Player, Figures> get_figure_by_position(std::string position);
 
 public:
-    Controller() = default;
+    Controller(std::string player_whites_name, std::string player_blacks_name, int rating_player_whites,
+               int rating_player_blacks);
     Controller(std::string path);
 
     void start_new_game();
