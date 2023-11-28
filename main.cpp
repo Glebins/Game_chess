@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include "Tools/Figures.h"
+#include "Tools/Player.h"
+#include "Tools/Controller.h"
 
 template <typename T>
 concept str_printable = std::is_convertible_v<T, std::string>;
@@ -65,9 +67,19 @@ int main()
     int x = 0xA;
     std::cout << x;
 
-    Pawn p;
+    Pawn pawn;
 
-    std::cout << std::endl << p.get_name_of_figure() << std::endl;
+    std::cout << std::endl << pawn.get_name_of_figure() << std::endl;
+
+    Player pp;
+    std::cout << pp.get_name() << "\n";
+
+    std::string qaz = "Arkadiy";
+    pp.set_name(qaz);
+
+    std::cout << pp.get_name() << " " << qaz << "\n";
+    qaz = "Gleb";
+    std::cout << pp.get_name() << " " << qaz << "\n";
 
     return 0;
 }

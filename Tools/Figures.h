@@ -19,8 +19,6 @@ public:
 
     virtual std::string get_name_of_figure() {};
 
-    virtual ~Figures() = default;
-
 };
 
 class King : Figures {

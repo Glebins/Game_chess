@@ -7,9 +7,6 @@
 
 #include "Figures.h"
 
-// Figures - интерфейс, 6 классов
-// В поле хранить указатели на фигуры
-
 class Player {
 
 private:
@@ -24,13 +21,13 @@ public:
     Player() : player_rating(0), elapsed_time(game_time) {}
     Player(std::string name, int rating) : player_name(std::move(name)),
         player_rating(rating), elapsed_time(game_time) {}
-    int get_elapsed_time();
+    int get_elapsed_time() const;
     void set_start_time();
 
-    std::string get_name();
+    std::string get_name() const;
     void set_name(std::string name);
 
-    int get_rating();
+    int get_rating() const;
     void set_rating(int rating);
 
 };

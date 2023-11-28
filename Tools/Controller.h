@@ -23,7 +23,7 @@ enum class Situations {
 class Controller {
 
 private:
-    bool state;
+    States state;
 
     Player player_whites;
     Player player_blacks;
@@ -43,10 +43,10 @@ public:
     void save_game_to_file(std::string path);
     void load_game_from_file(std::string path);
 
-    States get_state();
-    Situations get_situation();
+    States get_state() const;
+    Situations get_situation() const;
 
-    std::string get_game_history();
+    std::string get_game_history() const;
 
 };
 
