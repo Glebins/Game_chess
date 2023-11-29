@@ -41,7 +41,7 @@ void Controller::make_move(int from, int to)
             (state == States::move_blacks and figure_from_position->get_color() == 1))
     {
         std::cout << "\nmake move\n";
-        game_field.move_figure(figure_from_position, to);
+        game_field.move_figure(from, to);
     }
 
     if (state == States::move_whites)

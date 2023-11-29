@@ -37,16 +37,19 @@ void FiguresMatrix::set_figure(Figure &figure, int position)
 
 }
 
-void FiguresMatrix::move_figure(Figure *figure, int move_position)
+void FiguresMatrix::move_figure(int from_position, int move_position)
 {
-    if (!can_do_move(figure, move_position))
+    Figure *current_figure = get_figure(from_position);
+
+    if (!can_do_move(from_position, move_position))
     {
         std::cout << "Can't do move\n";
+
+        Figure *figure = get_figure(from_position);
         std::cout << figure->get_name_of_figure() << "\n\n";
         return;
     }
 
-    int current_position = find_figure(figure);
     Figure *figure_on_new_position = matrix[move_position / 8][move_position % 8];
 
     if (figure_on_new_position != nullptr)
@@ -54,14 +57,14 @@ void FiguresMatrix::move_figure(Figure *figure, int move_position)
         delete figure_on_new_position;
     }
 
-    matrix[move_position / 8][move_position % 8] = figure;
-    matrix[current_position / 8][current_position % 8] = nullptr;
+    matrix[move_position / 8][move_position % 8] = current_figure;
+    matrix[from_position / 8][from_position % 8] = nullptr;
 }
 
-bool FiguresMatrix::can_do_move(Figure *figure, int move_position)
+bool FiguresMatrix::can_do_move(int from_position, int move_position)
 {
-    int current_position = find_figure(figure);
-    bool can_move = figure->can_do_move(figure, current_position, move_position);
+    Figure *figure = get_figure(from_position);
+    bool can_move = figure->can_do_move(figure, from_position, move_position);
 
     if (!can_move) return false;
 

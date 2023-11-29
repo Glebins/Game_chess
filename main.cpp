@@ -17,11 +17,9 @@ int main()
     game.print_debug();
 
     int x0 = 7;
-    int y0 = 6;
-    int x1 = 5;
-    int y1 = 7;
-
-    // 62, 47
+    int y0 = 5;
+    int x1 = 4;
+    int y1 = 2;
 
     game.make_move(8 * x0 + y0, 8 * x1 + y1);
 

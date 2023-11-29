@@ -24,9 +24,9 @@ public:
 
     void set_start_disposition();
     void set_figure(Figure &figure, int position);
-    void move_figure(Figure *figure, int move_position);
+    void move_figure(int from_position, int move_position);
 
-    bool can_do_move(Figure *figure, int move_position);
+    bool can_do_move(int from_position, int move_position);
 
     int find_figure(Figure *figure) const;
 

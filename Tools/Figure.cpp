@@ -220,40 +220,40 @@ std::vector<int> Pawn::array_moves(Figure *figure, int position)
 
     if (figure->get_color() == 1)
     {
-        if (y == 1)
+        if (x == 1)
         {
-            moves.push_back(create_position(x, y + 1));
-            moves.push_back(create_position(x, y + 2));
+            moves.push_back(create_position(x + 1, y));
+            moves.push_back(create_position(x + 2, y));
         }
 
         else
         {
-            if (is_position_valid(x, y + 1))
-                moves.push_back(create_position(x, y + 1));
+            if (is_position_valid(x + 1, y))
+                moves.push_back(create_position(x + 1, y));
         }
 
-        if (is_position_valid(x - 1, y + 1))
-            moves.push_back(create_position(x - 1, y + 1));
+        if (is_position_valid(x + 1, y - 1))
+            moves.push_back(create_position(x + 1, y - 1));
         if (is_position_valid(x + 1, y + 1))
             moves.push_back(create_position(x + 1, y + 1));
     }
 
     else
     {
-        if (y == 6)
+        if (x == 6)
         {
-            moves.push_back(create_position(x, y - 1));
-            moves.push_back(create_position(x, y - 2));
+            moves.push_back(create_position(x - 1, y));
+            moves.push_back(create_position(x - 2, y));
         }
 
         else
         {
-            if (is_position_valid(x, y - 1))
-                moves.push_back(create_position(x, y - 1));
+            if (is_position_valid(x - 1, y))
+                moves.push_back(create_position(x, y));
         }
 
-        if (is_position_valid(x + 1, y - 1))
-            moves.push_back(create_position(x + 1, y - 1));
+        if (is_position_valid(x - 1, y + 1))
+            moves.push_back(create_position(x - 1, y + 1));
         if (is_position_valid(x - 1, y - 1))
             moves.push_back(create_position(x - 1, y - 1));
     }
