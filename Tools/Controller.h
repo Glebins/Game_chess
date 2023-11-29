@@ -5,7 +5,8 @@
 #include <cstring>
 
 #include "Player.h"
-#include "Figures.h"
+#include "Figure.h"
+#include "FiguresMatrix.h"
 
 enum class States {
     game_over,
@@ -28,10 +29,10 @@ private:
     Player player_whites;
     Player player_blacks;
 
-    Figures** game_field;
+    FiguresMatrix** game_field;
     std::string game_history;
 
-    std::pair<Player, Figures> get_figure_by_position(std::string position);
+    std::pair<Player, Figure> get_figure_by_position(std::string position);
 
 public:
     Controller(std::string player_whites_name, std::string player_blacks_name, int rating_player_whites,

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-std::pair<Player, Figures> Controller::get_figure_by_position(std::string position)
+std::pair<Player, Figure> Controller::get_figure_by_position(std::string position)
 {
     // pass
     return {};

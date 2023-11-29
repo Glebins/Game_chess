@@ -5,7 +5,7 @@
 #include <cstring>
 #include <utility>
 
-#include "Figures.h"
+#include "Figure.h"
 
 class Player {
 

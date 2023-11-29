@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Tools/Figures.h"
+#include "Tools/Figure.h"
 #include "Tools/Player.h"
 #include "Tools/Controller.h"
 
