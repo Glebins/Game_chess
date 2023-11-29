@@ -6,18 +6,35 @@
 class FiguresMatrix {
 
 private:
-    const int rows = 8;
-    const int cols = 8;
-    Figure **matrix;
+    const std::string disposition[8][8] = {
+            "rB", "kB", "bB", "qB", "KB", "bB", "kB", "rB",
+            "pB", "pB", "pB", "pB", "pB", "pB", "pB", "pB",
+            "-", "-", "-", "-", "-", "-", "-", "-",
+            "-", "-", "-", "-", "-", "-", "-", "-",
+            "-", "-", "-", "-", "-", "-", "-", "-",
+            "-", "-", "-", "-", "-", "-", "-", "-",
+            "pW", "pW", "pW", "pW", "pW", "pW", "pW", "pW",
+            "rW", "kW", "bW", "qW", "KW", "bW", "kW", "rW"
+    };
+
+    Figure ***matrix;
 
 public:
     FiguresMatrix();
 
     void set_start_disposition();
     void set_figure(Figure &figure, int position);
-    void move_figure();
+    void move_figure(Figure *figure, int move_position);
 
-    Figure &get_figure(int position);
+    bool can_do_move(Figure *figure, int move_position);
+
+    int find_figure(Figure *figure) const;
+
+    Figure *get_figure(int position);
+
+    void print_debug() const;
+
+    void free_memory();
 
     ~FiguresMatrix();
 

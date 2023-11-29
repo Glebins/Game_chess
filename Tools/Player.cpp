@@ -5,6 +5,11 @@ int Player::get_elapsed_time() const
     return elapsed_time;
 }
 
+void Player::set_time(int time)
+{
+    elapsed_time = time;
+}
+
 void Player::set_start_time()
 {
     elapsed_time = game_time;

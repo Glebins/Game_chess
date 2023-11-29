@@ -29,7 +29,7 @@ private:
     Player player_whites;
     Player player_blacks;
 
-    FiguresMatrix** game_field;
+    FiguresMatrix game_field;
     std::string game_history;
 
     std::pair<Player, Figure> get_figure_by_position(std::string position);
@@ -40,7 +40,7 @@ public:
     Controller(std::string path);
 
     void start_new_game();
-    void make_move(std::string move);
+    void make_move(int from, int to);
     void save_game_to_file(std::string path);
     void load_game_from_file(std::string path);
 
@@ -48,6 +48,8 @@ public:
     Situations get_situation() const;
 
     std::string get_game_history() const;
+
+    void print_debug() const;
 
 };
 

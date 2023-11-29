@@ -5,8 +5,6 @@
 #include <cstring>
 #include <utility>
 
-#include "Figure.h"
-
 class Player {
 
 private:
@@ -22,6 +20,7 @@ public:
     Player(std::string name, int rating) : player_name(std::move(name)),
         player_rating(rating), elapsed_time(game_time) {}
     int get_elapsed_time() const;
+    void set_time(int time);
     void set_start_time();
 
     std::string get_name() const;
