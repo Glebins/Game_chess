@@ -28,7 +28,8 @@ Controller::Controller(std::string path)
 
 void Controller::start_new_game()
 {
-    // game_field -> starting position
+    game_field.free_memory();
+    game_field.set_start_disposition();
     state = States::move_whites;
     game_history = "";
 }
@@ -42,12 +43,12 @@ void Controller::make_move(int from, int to)
     {
         std::cout << "\nmake move\n";
         game_field.move_figure(from, to);
-    }
 
-    if (state == States::move_whites)
-        state = States::move_blacks;
-    else if (state == States::move_blacks)
-        state = States::move_whites;
+        if (state == States::move_whites)
+            state = States::move_blacks;
+        else if (state == States::move_blacks)
+            state = States::move_whites;
+    }
 }
 
 void Controller::save_game_to_file(std::string path)

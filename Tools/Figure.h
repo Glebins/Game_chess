@@ -17,9 +17,10 @@ private:
 
 protected:
     static bool is_position_valid(int x, int y);
-    static int create_position(int x, int y);
 
 public:
+    static int create_position(int x, int y);
+
     virtual Figure* symbol_to_figure(std::string symbol);
     virtual char figure_to_symbol(Figure figure) {};
 
