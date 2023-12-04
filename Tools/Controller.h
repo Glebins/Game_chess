@@ -8,6 +8,8 @@
 #include "Figure.h"
 #include "FiguresMatrix.h"
 
+#include "../View/Field.h"
+
 enum class States {
     game_over,
     move_whites,
@@ -50,6 +52,7 @@ public:
     std::string get_game_history() const;
 
     void print_debug() const;
+    void create_window_debug() const;
 
 };
 

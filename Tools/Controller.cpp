@@ -83,3 +83,9 @@ void Controller::print_debug() const
 {
     game_field.print_debug();
 }
+
+void Controller::create_window_debug() const
+{
+    Field f;
+    f.create_window((FiguresMatrix &) game_field);
+}

@@ -1,0 +1,26 @@
+#ifndef CHESS_FIELD_H
+#define CHESS_FIELD_H
+
+#include <SFML/Graphics.hpp>
+
+#include "../Tools/Controller.h"
+#include "../Tools/FiguresMatrix.h"
+
+class Field {
+
+private:
+    const int rows = 8;
+    const int cols = 8;
+    const int window_width = 800;
+    const int window_height = 800;
+
+    sf::RenderWindow window;
+
+public:
+    void create_window(FiguresMatrix &matrix);
+    void draw_initial_disposition(FiguresMatrix &matrix);
+
+};
+
+
+#endif //CHESS_FIELD_H

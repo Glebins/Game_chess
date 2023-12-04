@@ -6,7 +6,6 @@
 class FiguresMatrix {
 
 private:
-    // static
     const std::string disposition[8][8] = {
             "rB", "kB", "bB", "qB", "KB", "bB", "kB", "rB",
             "pB", "pB", "pB", "pB", "pB", "pB", "pB", "pB",
