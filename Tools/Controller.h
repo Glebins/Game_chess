@@ -6,7 +6,7 @@
 
 #include "Player.h"
 #include "Figure.h"
-#include "FiguresMatrix.h"
+#include "../Model/FiguresMatrix.h"
 
 #include "../View/Field.h"
 

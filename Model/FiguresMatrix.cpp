@@ -34,11 +34,6 @@ void FiguresMatrix::set_start_disposition()
     }
 }
 
-void FiguresMatrix::set_figure(Figure &figure, int position)
-{
-
-}
-
 void FiguresMatrix::move_figure(int from_position, int move_position)
 {
     Figure *current_figure = get_figure(from_position);

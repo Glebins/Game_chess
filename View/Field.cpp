@@ -13,6 +13,9 @@ void Field::create_window(FiguresMatrix &matrix)
         {
             if (event.type == sf::Event::Closed or sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
                 window.close();
+
+            if (event.type == sf::Event::MouseButtonPressed)
+                ;// pass;
         }
 
         window.clear();
@@ -50,25 +53,27 @@ void Field::draw_initial_disposition(FiguresMatrix& matrix)
             if (!current_figure)
                 continue;
 
-            if (std::strcmp(current_figure->get_name_of_figure().c_str(), "Pawn") != 0)
-                continue;
-
             sf::Texture figure_texture;
-            sf::Image figure_image;
-            std::string path = "../Pictures/" + current_figure->get_name_of_figure() + "_2.png";
+            std::string path = "../Pictures/" + current_figure->get_name_of_figure() + ".png";
 
-            figure_image.loadFromFile(path);
-            figure_image.createMaskFromColor(sf::Color::Magenta);
-            figure_texture.loadFromImage(figure_image);
+            figure_texture.loadFromFile(path);
 
             sf::Sprite figure_sprite;
             figure_sprite.setTexture(figure_texture);
             // figure_sprite.setTextureRect(sf::IntRect(0, 0, 800, 800));
-            figure_sprite.setScale((float) cell_width / figure_texture.getSize().x,
-                                   (float) cell_height / figure_texture.getSize().y);
-            figure_sprite.setPosition(start_x, start_y);
+            double coefficient = (!std::strcmp(current_figure->get_name_of_figure().c_str(), "King") or
+                    !std::strcmp(current_figure->get_name_of_figure().c_str(), "Queen") or
+                    !std::strcmp(current_figure->get_name_of_figure().c_str(), "Knight")) ? 0.8 : 1;
+            figure_sprite.setScale((float) cell_width / figure_texture.getSize().x * coefficient,
+                                   (float) cell_height / figure_texture.getSize().y * coefficient);
+            double x_pose = (1 - coefficient) * cell_width / 2 + start_x;
+            double y_pose = (1 - coefficient) * cell_height / 2 + start_y;
+            figure_sprite.setPosition((float) x_pose, (float) y_pose);
 
-            figure_sprite.setColor(sf::Color(255, 255, 255, 250));
+            if (current_figure->get_color() == 1)
+                figure_sprite.setColor(sf::Color::Black);
+            else
+                figure_sprite.setColor(sf::Color::White);
 
             window.draw(figure_sprite);
         }

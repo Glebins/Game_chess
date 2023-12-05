@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../Tools/Controller.h"
-#include "../Tools/FiguresMatrix.h"
+#include "../Model/FiguresMatrix.h"
 
 class Field {
 

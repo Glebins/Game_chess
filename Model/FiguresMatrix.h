@@ -1,7 +1,8 @@
 #ifndef GAME_CHESS_FIGURESMATRIX_H
 #define GAME_CHESS_FIGURESMATRIX_H
 
-#include "Figure.h"
+#include "../Tools/Figure.h"
+#include "Matrix.h"
 
 class FiguresMatrix {
 
@@ -17,6 +18,7 @@ private:
             "rW", "kW", "bW", "qW", "KW", "bW", "kW", "rW"
     };
 
+    // Matrix<Figure *> matrix;
     Figure ***matrix;
 
 public:
