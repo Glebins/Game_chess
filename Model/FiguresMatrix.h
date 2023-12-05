@@ -4,7 +4,7 @@
 #include "../Tools/Figure.h"
 #include "Matrix.h"
 
-class FiguresMatrix {
+class FiguresMatrix : public Matrix<Figure *> {
 
 private:
     const std::string disposition[8][8] = {
@@ -18,14 +18,12 @@ private:
             "rW", "kW", "bW", "qW", "KW", "bW", "kW", "rW"
     };
 
-    // Matrix<Figure *> matrix;
-    Figure ***matrix;
+    // Figure ***matrix;
 
 public:
-    FiguresMatrix();
+    FiguresMatrix(int rows, int cols);
 
     void set_start_disposition();
-    void set_figure(Figure &figure, int position);
     void move_figure(int from_position, int move_position);
 
     bool can_do_move(int from_position, int move_position);
@@ -34,11 +32,7 @@ public:
 
     Figure *get_figure(int position);
 
-    void print_debug() const;
-
-    void free_memory();
-
-    ~FiguresMatrix();
+    ~FiguresMatrix() = default;
 
 };
 

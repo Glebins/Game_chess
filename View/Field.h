@@ -18,7 +18,8 @@ private:
 
 public:
     void create_window(FiguresMatrix &matrix);
-    void draw_initial_disposition(FiguresMatrix &matrix);
+    void draw_disposition(FiguresMatrix &matrix);
+    void check_mouse_click();
 
 };
 

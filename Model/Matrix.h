@@ -6,7 +6,7 @@
 template <typename T>
 class Matrix {
 
-private:
+protected:
     int rows, cols;
     T **data;
 
@@ -19,6 +19,13 @@ public:
     }
 
     ~Matrix()
+    {
+        for (int i = 0; i < rows; i++)
+            delete[] data[i];
+        delete[] data;
+    }
+
+    void free_memory()
     {
         for (int i = 0; i < rows; i++)
             delete[] data[i];
@@ -42,7 +49,7 @@ public:
         return cols;
     }
 
-    void print()
+    void print() const
     {
         std::cout << "\n";
 
@@ -133,7 +140,7 @@ public:
             }
         }
 
-        throw std::out_of_range("element wasn't found");
+        throw std::out_of_range("Element wasn't found");
     }
 
 };

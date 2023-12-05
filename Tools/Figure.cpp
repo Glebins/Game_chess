@@ -60,6 +60,18 @@ Figure* Figure::symbol_to_figure(std::string symbol)
     return nullptr;
 }
 
+std::ostream& operator <<(std::ostream& stream, Figure *figure)
+{
+    if (figure == nullptr)
+    {
+        stream << "-";
+        return stream;
+    }
+
+    stream << (figure->get_color() ? "b" : "w") << figure->get_name_of_figure();
+    return stream;
+}
+
 bool Figure::can_do_move(Figure *figure, int position, int move_position)
 {
     std::vector<int> moves = array_moves(figure, position);

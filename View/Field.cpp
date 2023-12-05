@@ -8,6 +8,7 @@ void Field::create_window(FiguresMatrix &matrix)
     {
         sf::Event event {};
 
+        window.clear();
 
         while (window.pollEvent(event))
         {
@@ -15,18 +16,25 @@ void Field::create_window(FiguresMatrix &matrix)
                 window.close();
 
             if (event.type == sf::Event::MouseButtonPressed)
-                ;// pass;
+            {
+                // todo another thread
+                std::cout << "\n" << sf::Mouse::getPosition().x << " " << sf::Mouse::getPosition().y << "\n";
+
+                sf::CircleShape cir;
+                cir.setRadius(100);
+                cir.setPosition(200, 200);
+
+                window.draw(cir);
+            }
         }
 
-        window.clear();
-
-        draw_initial_disposition(matrix);
+        draw_disposition(matrix);
 
         window.display();
     }
 }
 
-void Field::draw_initial_disposition(FiguresMatrix& matrix)
+void Field::draw_disposition(FiguresMatrix& matrix)
 {
     int cell_width = window_width / cols;
     int cell_height = window_height / rows;
@@ -78,4 +86,15 @@ void Field::draw_initial_disposition(FiguresMatrix& matrix)
             window.draw(figure_sprite);
         }
     }
+}
+
+inline void Field::check_mouse_click()
+{
+    std::cout << "\n" << sf::Mouse::getPosition().x << " " << sf::Mouse::getPosition().y << "\n";
+
+    sf::CircleShape cir;
+    cir.setRadius(100);
+    cir.setPosition(200, 200);
+
+    window.draw(cir);
 }

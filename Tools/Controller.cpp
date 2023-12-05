@@ -9,8 +9,7 @@ std::pair<Player, Figure> Controller::get_figure_by_position(std::string positio
 }
 
 Controller::Controller(std::string name_player_whites, std::string name_player_blacks, int rating_player_whites,
-                       int rating_player_blacks)
-{
+                       int rating_player_blacks) : game_field(8, 8) {
     player_blacks.set_name(std::move(name_player_blacks));
     player_blacks.set_rating(rating_player_blacks);
     player_whites.set_name(std::move(name_player_whites));
@@ -21,8 +20,7 @@ Controller::Controller(std::string name_player_whites, std::string name_player_b
     game_history = "";
 }
 
-Controller::Controller(std::string path)
-{
+Controller::Controller(std::string path) : game_field(0, 0) {
     // parse path
 }
 
@@ -81,7 +79,7 @@ std::string Controller::get_game_history() const
 
 void Controller::print_debug() const
 {
-    game_field.print_debug();
+    game_field.print();
 }
 
 void Controller::create_window_debug() const

@@ -10,7 +10,7 @@
 
 int main()
 {
-    Matrix<int> m(3, 3);
+    /* Matrix<int> m(3, 3);
 
     for (int i = 0; i < m.get_rows(); ++i) {
         for (int j = 0; j < m.get_cols(); ++j) {
@@ -38,10 +38,10 @@ int main()
 
     m.print();
 
-    std::cout << m.find_element(2);
+    std::cout << m.find_element(2); */
 
 
-    /* std::string name_whites = "James";
+    std::string name_whites = "James";
     std::string name_blacks = "Robert";
     int rating_whites = 100;
     int rating_blacks = 130;
@@ -65,7 +65,7 @@ int main()
 
     game.print_debug();
 
-    game.create_window_debug(); */
+    game.create_window_debug();
 
     return 0;
 }

@@ -30,6 +30,8 @@ public:
     virtual std::string get_name_of_figure() { return "Unknown"; };
     [[nodiscard]] int get_color() const { return color; }
 
+    friend std::ostream& operator << (std::ostream& stream, Figure *figure);
+
 };
 
 class King : public Figure {
