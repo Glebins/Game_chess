@@ -19,7 +19,8 @@ private:
 public:
     void create_window(FiguresMatrix &matrix);
     void draw_disposition(FiguresMatrix &matrix);
-    void check_mouse_click();
+    void check_mouse_click(FiguresMatrix &matrix);
+    void draw_accessible_moves(FiguresMatrix &matrix, int x_board, int y_board, int cell_size);
 
 };
 

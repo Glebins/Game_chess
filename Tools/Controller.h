@@ -31,7 +31,7 @@ private:
     Player player_whites;
     Player player_blacks;
 
-    FiguresMatrix game_field;
+    FiguresMatrix game_field; // make reference
     std::string game_history;
 
     std::pair<Player, Figure> get_figure_by_position(std::string position);
