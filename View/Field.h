@@ -14,14 +14,22 @@ private:
     const int window_width = 800;
     const int window_height = 800;
 
+    FiguresMatrix &game_field;
+    States &state;
     sf::RenderWindow window;
 
 public:
-    void create_window(FiguresMatrix &matrix);
-    void draw_disposition(FiguresMatrix &matrix);
-    void check_mouse_click(FiguresMatrix &matrix);
-    void draw_accessible_moves(FiguresMatrix &matrix, int x_board, int y_board, int cell_size);
+    Field(FiguresMatrix &matrix, States &state);
 
+    void create_window();
+    void draw_disposition();
+    void listen_mouse_click();
+    void check_mouse_click(sf::Event event);
+
+
+    void draw_accessible_moves(int x_board, int y_board, int cell_size);
+
+    ~Field() = default;
 };
 
 

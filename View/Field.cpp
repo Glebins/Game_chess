@@ -1,16 +1,19 @@
 #include "Field.h"
 
-void Field::create_window(FiguresMatrix &matrix)
+Field::Field(FiguresMatrix &matrix, States &states1) : game_field(matrix), state(states1)
+{ }
+
+void Field::create_window()
 {
     window.create(sf::VideoMode(window_width, window_height), "Chess");
 
     window.clear();
-    draw_disposition(matrix);
+    draw_disposition();
     window.display();
 
     while (window.isOpen())
     {
-        check_mouse_click(matrix);
+        listen_mouse_click();
     }
 
     /* while (window.isOpen())
@@ -31,7 +34,7 @@ void Field::create_window(FiguresMatrix &matrix)
     } */
 }
 
-void Field::draw_disposition(FiguresMatrix& matrix)
+void Field::draw_disposition()
 {
     int cell_width = window_width / cols;
     int cell_height = window_height / rows;
@@ -53,7 +56,7 @@ void Field::draw_disposition(FiguresMatrix& matrix)
 
             window.draw(cell);
 
-            Figure *current_figure = matrix.get_figure(rows * i + j);
+            Figure *current_figure = game_field.get_figure(rows * i + j);
 
             if (!current_figure)
                 continue;
@@ -84,9 +87,9 @@ void Field::draw_disposition(FiguresMatrix& matrix)
     }
 }
 
-void Field::check_mouse_click(FiguresMatrix &matrix)
+void Field::listen_mouse_click()
 {
-    sf::Event event;
+    sf::Event event {};
     while (window.pollEvent(event))
     {
         if (event.type == sf::Event::Closed or sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
@@ -95,33 +98,27 @@ void Field::check_mouse_click(FiguresMatrix &matrix)
         {
             if (event.mouseButton.button == sf::Mouse::Left)
             {
-                int cell_width = window_width / cols;
-                int cell_height = window_height / rows;
-                int x_board = (int) ((double) event.mouseButton.x / ((double) cell_width));
-                int y_board = (int) ((double) event.mouseButton.y / ((double) cell_height));
-
-                Figure* current_figure = matrix.get_figure(x_board * 8 + y_board);
-
-                int cell_size = cell_width;
-                double radius = cell_size / 3.0;
-                sf::CircleShape circle(radius);
-                circle.setFillColor(sf::Color::Red);
-
-                double cell_center_x = cell_size * (x_board + 1.0 / 2) - radius;
-                double cell_center_y = cell_size * (y_board + 1.0 / 2) - radius;
-
-                circle.setPosition(sf::Vector2f(cell_center_x, cell_center_y));
-
-                window.clear();
-                draw_disposition(matrix);
-                window.draw(circle);
-                window.display();
+                check_mouse_click(event);
             }
         }
     }
 }
 
-void Field::draw_accessible_moves(FiguresMatrix &matrix, int x_board, int y_board, int cell_size)
+void Field::check_mouse_click(sf::Event event)
+{
+    int cell_width = window_width / cols;
+    int cell_height = window_height / rows;
+    int x_board = (int) ((double) event.mouseButton.x / ((double) cell_width));
+    int y_board = (int) ((double) event.mouseButton.y / ((double) cell_height));
+
+    Figure* current_figure = game_field.get_figure(y_board * 8 + x_board);
+
+    if (current_figure != nullptr and ((current_figure->get_color() == 1 and state == States::move_blacks) or
+            (current_figure->get_color() == 0 and state == States::move_whites)))
+        draw_accessible_moves(x_board, y_board, cell_width);
+}
+
+void Field::draw_accessible_moves(int x_board, int y_board, int cell_size)
 {
     double radius = cell_size / 3.0;
     sf::CircleShape circle(radius);
@@ -133,7 +130,7 @@ void Field::draw_accessible_moves(FiguresMatrix &matrix, int x_board, int y_boar
     circle.setPosition(sf::Vector2f(cell_center_x, cell_center_y));
 
     window.clear();
-    draw_disposition(matrix);
+    draw_disposition();
     window.draw(circle);
     window.display();
 }
