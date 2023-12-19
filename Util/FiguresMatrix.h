@@ -6,12 +6,6 @@
 
 class FiguresMatrix : public Matrix<Figure *> {
 
-    enum class States {
-        game_over,
-        move_whites,
-        move_blacks,
-    };
-
 private:
     const std::string disposition[8][8] = {
             "rB", "kB", "bB", "qB", "KB", "bB", "kB", "rB",
@@ -23,8 +17,6 @@ private:
             "pW", "pW", "pW", "pW", "pW", "pW", "pW", "pW",
             "rW", "kW", "bW", "qW", "KW", "bW", "kW", "rW"
     };
-
-    // Figure ***matrix;
 
 public:
     FiguresMatrix(int rows, int cols);

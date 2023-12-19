@@ -1,6 +1,9 @@
 #include "Field.h"
 
-Field::Field(FiguresMatrix &matrix, States &states1) : game_field(matrix), state(states1)
+Field::Field(FiguresMatrix &matrix) : game_field(matrix)
+{ }
+
+Field::Field(Field &&old_field) : game_field(old_field.game_field)
 { }
 
 void Field::create_window()
@@ -15,23 +18,6 @@ void Field::create_window()
     {
         listen_mouse_click();
     }
-
-    /* while (window.isOpen())
-    {
-        // window.clear();
-        // window.display();
-
-        sf::Event event {};
-
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed or sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-                window.close();
-            else if (event.type == sf::Event::MouseButtonPressed)
-                check_mouse_click();
-        }
-
-    } */
 }
 
 void Field::draw_disposition()
@@ -111,11 +97,12 @@ void Field::check_mouse_click(sf::Event event)
     int x_board = (int) ((double) event.mouseButton.x / ((double) cell_width));
     int y_board = (int) ((double) event.mouseButton.y / ((double) cell_height));
 
-    Figure* current_figure = game_field.get_figure(y_board * 8 + x_board);
+    // Controller().button_is_pressed();
 
-    if (current_figure != nullptr and ((current_figure->get_color() == 1 and state == States::move_blacks) or
-            (current_figure->get_color() == 0 and state == States::move_whites)))
-        draw_accessible_moves(x_board, y_board, cell_width);
+    /* Figure* current_figure = game_field.get_figure(y_board * 8 + x_board);
+
+    if (current_figure != nullptr)
+        draw_accessible_moves(x_board, y_board, cell_width); */
 }
 
 void Field::draw_accessible_moves(int x_board, int y_board, int cell_size)
@@ -135,3 +122,14 @@ void Field::draw_accessible_moves(int x_board, int y_board, int cell_size)
     window.display();
 }
 
+void Field::display_current_disposition()
+{
+    window.clear();
+    draw_disposition();
+    window.display();
+}
+
+void Field::print_debug()
+{
+    game_field.print();
+}
