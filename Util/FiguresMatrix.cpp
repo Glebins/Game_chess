@@ -46,10 +46,10 @@ void FiguresMatrix::move_figure(int from_position, int move_position)
 
     if (!can_do_move(from_position, move_position))
     {
-        // throw
-        std::cout << "Can't do move\n";
-
-        return;
+        throw std::logic_error("Can't do move");
+        // throw or nothing
+        // std::cout << "Can't do move\n";
+        // return;
     }
 
     Figure *figure_on_new_position = data[move_position / 8][move_position % 8];
@@ -77,23 +77,39 @@ bool FiguresMatrix::can_do_move(int from_position, int move_position)
     int x1 = move_position / 8;
     int y1 = move_position % 8;
 
-    if (x0 > x1)
+    /* if (x0 > x1)
     {
         int tmp = x1;
         x1 = x0;
         x0 = tmp;
-    }
+    } */
 
-    if (figure->get_name_of_figure() == "Pawn" or figure->get_name_of_figure() == "King")
+    if (figure->get_name_of_figure() == "King")
     {
         // pass out
+    }
+
+    else if (figure->get_name_of_figure() == "Pawn")
+    {
+        if (abs(x1 - x0) == 2)
+        {
+            if (get_figure(Figure().create_position((x1 + x0) / 2, y0)) != nullptr)
+                return false;
+        }
+
+        if ((y0 == y1) and (figure_on_new_position != nullptr))
+            return false;
+
+        if ((y0 != y1) and (figure_on_new_position == nullptr or
+            figure_on_new_position->get_color() == figure->get_color()))
+            return false;
     }
 
     else if (figure->get_name_of_figure() == "Rook")
     {
         int difference = (x0 == x1) ? (y1 - y0) : (x1 - x0);
 
-        while (difference != 1)
+        while (abs(difference) != 1)
         {
             int i, j;
 
@@ -123,17 +139,21 @@ bool FiguresMatrix::can_do_move(int from_position, int move_position)
         int sign_y = (y1 - y0) / abs(y1 - y0);
 
         int difference_x = x1 - x0;
+        int difference_y = y1 - y0;
 
-        while (difference_x != 0)
+        while (abs(difference_x) != 1)
         {
             int i = x0 + difference_x - sign_x;
-            int j = y0 + difference_x - sign_y;
+            int j = y0 + difference_y - sign_y;
 
             if (get_figure(Figure().create_position(i, j)) != nullptr)
                 return false;
 
             difference_x -= sign_x;
+            difference_y -= sign_y;
         }
+
+        std::cout << "\n";
     }
 
     else if (figure->get_name_of_figure() == "Queen")
@@ -142,23 +162,27 @@ bool FiguresMatrix::can_do_move(int from_position, int move_position)
 
         if (x0 == x1)
         {
-            while (difference != 1)
+            while (abs(difference) != 1)
             {
                 int i = x0;
                 int j = y0 + difference - (int) difference / abs(difference);
                 if (get_figure(Figure().create_position(i, j)) != nullptr)
                     return false;
+
+                difference -= (int) (difference) / abs(difference);
             }
         }
 
         else if (y0 == y1)
         {
-            while (difference != 1)
+            while (abs(difference) != 1)
             {
                 int i = x0 + difference - (int) difference / abs(difference);
                 int j = y0;
                 if (get_figure(Figure().create_position(i, j)) != nullptr)
                     return false;
+
+                difference -= (int) (difference) / abs(difference);
             }
         }
 
@@ -168,16 +192,18 @@ bool FiguresMatrix::can_do_move(int from_position, int move_position)
             int sign_y = (y1 - y0) / abs(y1 - y0);
 
             int difference_x = x1 - x0;
+            int difference_y = y1 - y0;
 
-            while (difference_x != 0)
+            while (abs(difference_x) != 1)
             {
                 int i = x0 + difference_x - sign_x;
-                int j = y0 + difference_x - sign_y;
+                int j = y0 + difference_y - sign_y;
 
                 if (get_figure(Figure().create_position(i, j)) != nullptr)
                     return false;
 
                 difference_x -= sign_x;
+                difference_y -= sign_y;
             }
         }
     }

@@ -26,7 +26,7 @@ Figure* Figure::symbol_to_figure(std::string symbol)
         another_figure->color = col;
         return another_figure;
     }
-    else if (code == 'k')
+    else if (code == 'n')
     {
         auto *another_figure = new Knight();
         another_figure->color = col;
@@ -44,7 +44,7 @@ Figure* Figure::symbol_to_figure(std::string symbol)
         another_figure->color = col;
         return another_figure;
     }
-    else if (code == 'K')
+    else if (code == 'k')
     {
         auto *another_figure = new King();
         another_figure->color = col;
@@ -84,9 +84,6 @@ bool Figure::can_do_move(Figure *figure, int position, int move_position)
 
 
 
-char King::figure_to_symbol(Figure figure)
-{ }
-
 std::vector<int> King::array_moves(Figure *figure, int position)
 {
     int x = position / 8;
@@ -115,9 +112,6 @@ std::vector<int> King::array_moves(Figure *figure, int position)
 }
 
 
-char Queen::figure_to_symbol(Figure figure)
-{ }
-
 std::vector<int> Queen::array_moves(Figure *figure, int position)
 {
     int x = position / 8;
@@ -138,10 +132,6 @@ std::vector<int> Queen::array_moves(Figure *figure, int position)
 }
 
 
-
-
-char Rook::figure_to_symbol(Figure figure)
-{ }
 
 std::vector<int> Rook::array_moves(Figure *figure, int position)
 {
@@ -167,9 +157,6 @@ std::vector<int> Rook::array_moves(Figure *figure, int position)
 
 
 
-char Bishop::figure_to_symbol(Figure figure)
-{ }
-
 std::vector<int> Bishop::array_moves(Figure *figure, int position)
 {
     int x = position / 8;
@@ -194,8 +181,6 @@ std::vector<int> Bishop::array_moves(Figure *figure, int position)
 
 
 
-char Knight::figure_to_symbol(Figure figure)
-{ }
 
 std::vector<int> Knight::array_moves(Figure *figure, int position)
 {
@@ -219,9 +204,6 @@ std::vector<int> Knight::array_moves(Figure *figure, int position)
 
 
 
-
-char Pawn::figure_to_symbol(Figure figure)
-{ }
 
 std::vector<int> Pawn::array_moves(Figure *figure, int position)
 {
@@ -261,7 +243,7 @@ std::vector<int> Pawn::array_moves(Figure *figure, int position)
         else
         {
             if (is_position_valid(x - 1, y))
-                moves.push_back(create_position(x, y));
+                moves.push_back(create_position(x - 1, y));
         }
 
         if (is_position_valid(x - 1, y + 1))

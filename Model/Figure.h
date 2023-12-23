@@ -22,7 +22,7 @@ public:
     static int create_position(int x, int y);
 
     virtual Figure* symbol_to_figure(std::string symbol);
-    virtual char figure_to_symbol(Figure figure) {};
+    virtual char figure_to_symbol() {};
 
     virtual std::vector<int> array_moves(Figure *figure, int position) {};
     bool can_do_move(Figure *figure, int position, int move_position);
@@ -37,7 +37,7 @@ public:
 class King : public Figure {
 
 public:
-    char figure_to_symbol(Figure figure) override;
+    char figure_to_symbol() override { return 'k'; };
 
     std::vector<int> array_moves(Figure *figure, int position) override;
 
@@ -48,7 +48,7 @@ public:
 class Queen : public Figure {
 
 public:
-    char figure_to_symbol(Figure figure) override;
+    char figure_to_symbol() override { return 'q'; }
 
     std::vector<int> array_moves(Figure *figure, int position) override;
 
@@ -59,7 +59,7 @@ public:
 class Rook : public Figure {
 
 public:
-    char figure_to_symbol(Figure figure) override;
+    char figure_to_symbol() override { return 'r'; }
 
     std::vector<int> array_moves(Figure *figure, int position) override;
 
@@ -70,7 +70,7 @@ public:
 class Bishop : public Figure {
 
 public:
-    char figure_to_symbol(Figure figure) override;
+    char figure_to_symbol() override { return 'b'; }
 
     std::vector<int> array_moves(Figure *figure, int position) override;
 
@@ -81,7 +81,7 @@ public:
 class Knight : public Figure {
 
 public:
-    char figure_to_symbol(Figure figure) override;
+    char figure_to_symbol() override { return 'n'; }
 
     std::vector<int> array_moves(Figure *figure, int position) override;
 
@@ -92,7 +92,7 @@ public:
 class Pawn : public Figure {
 
 public:
-    char figure_to_symbol(Figure figure) override;
+    char figure_to_symbol() override { return 'p'; }
 
     std::vector<int> array_moves(Figure *figure, int position) override;
 

@@ -1,21 +1,21 @@
 #ifndef GAME_CHESS_FIGURESMATRIX_H
 #define GAME_CHESS_FIGURESMATRIX_H
 
-#include "../Tools/Figure.h"
+#include "../Model/Figure.h"
 #include "Matrix.h"
 
 class FiguresMatrix : public Matrix<Figure *> {
 
 private:
     const std::string disposition[8][8] = {
-            "rB", "kB", "bB", "qB", "KB", "bB", "kB", "rB",
+            "rB", "nB", "bB", "qB", "kB", "bB", "nB", "rB",
             "pB", "pB", "pB", "pB", "pB", "pB", "pB", "pB",
             "-", "-", "-", "-", "-", "-", "-", "-",
             "-", "-", "-", "-", "-", "-", "-", "-",
             "-", "-", "-", "-", "-", "-", "-", "-",
             "-", "-", "-", "-", "-", "-", "-", "-",
             "pW", "pW", "pW", "pW", "pW", "pW", "pW", "pW",
-            "rW", "kW", "bW", "qW", "KW", "bW", "kW", "rW"
+            "rW", "nW", "bW", "qW", "kW", "bW", "nW", "rW"
     };
 
 public:

@@ -1,10 +1,9 @@
 #include "Field.h"
 
-Field::Field(FiguresMatrix &matrix) : game_field(matrix)
+Field::Field(sf::RenderWindow &window1, FiguresMatrix &matrix) : game_field(matrix), window(window1)
 { }
 
-Field::Field(Field &&old_field) : game_field(old_field.game_field)
-{ }
+// Field::Field(Field &&old_field) : game_field(old_field.game_field) { }
 
 void Field::create_window()
 {
@@ -105,20 +104,51 @@ void Field::check_mouse_click(sf::Event event)
         draw_accessible_moves(x_board, y_board, cell_width); */
 }
 
-void Field::draw_accessible_moves(int x_board, int y_board, int cell_size)
+void Field::draw_accessible_moves(int x_board, int y_board, double cell_size)
 {
+    int tmp = x_board;
+    x_board = y_board;
+    y_board = tmp;
+
+    Figure *current_figure = game_field.get_figure(8 * x_board + y_board);
+
+    window.clear();
+    draw_disposition();
+
+    for (int i = 0; i < game_field.get_rows(); i++)
+    {
+        for (int j = 0; j < game_field.get_cols(); j++)
+        {
+            if (i == y_board and j == x_board)
+                continue;
+
+            if (!game_field.can_do_move(8 * y_board + x_board, 8 * i + j))
+                continue;
+
+            double radius = cell_size / 5.0;
+            sf::CircleShape circle((float) radius);
+            circle.setFillColor(sf::Color(101, 163, 7, 200));
+
+            double cell_center_x = cell_size * (j + 1.0 / 2) - radius;
+            double cell_center_y = cell_size * (i + 1.0 / 2) - radius;
+
+            circle.setPosition(sf::Vector2f((float) cell_center_x, (float) cell_center_y));
+
+            window.draw(circle);
+        }
+    }
+
     double radius = cell_size / 3.0;
-    sf::CircleShape circle(radius);
-    circle.setFillColor(sf::Color::Red);
+    sf::CircleShape circle((float) radius);
+    circle.setFillColor(sf::Color(250, 0, 250, 128));
 
     double cell_center_x = cell_size * (x_board + 1.0 / 2) - radius;
     double cell_center_y = cell_size * (y_board + 1.0 / 2) - radius;
 
-    circle.setPosition(sf::Vector2f(cell_center_x, cell_center_y));
+    circle.setPosition(sf::Vector2f((float) cell_center_x, (float) cell_center_y));
 
-    window.clear();
-    draw_disposition();
     window.draw(circle);
+
     window.display();
 }
 
@@ -132,4 +162,9 @@ void Field::display_current_disposition()
 void Field::print_debug()
 {
     game_field.print();
+}
+
+FiguresMatrix& Field::get_figures_matrix()
+{
+    return game_field;
 }
