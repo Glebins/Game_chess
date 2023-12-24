@@ -21,8 +21,8 @@ void Field::create_window()
 
 void Field::draw_disposition()
 {
-    int cell_width = window_width / cols;
-    int cell_height = window_height / rows;
+    int cell_width = board_width / cols;
+    int cell_height = board_height / rows;
 
     for (int i = 0; i < rows; i++)
     {
@@ -79,6 +79,7 @@ void Field::listen_mouse_click()
     {
         if (event.type == sf::Event::Closed or sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
             window.close();
+
         else if (event.type == sf::Event::MouseButtonPressed)
         {
             if (event.mouseButton.button == sf::Mouse::Left)
@@ -91,8 +92,8 @@ void Field::listen_mouse_click()
 
 void Field::check_mouse_click(sf::Event event)
 {
-    int cell_width = window_width / cols;
-    int cell_height = window_height / rows;
+    int cell_width = board_width / cols;
+    int cell_height = board_height / rows;
     int x_board = (int) ((double) event.mouseButton.x / ((double) cell_width));
     int y_board = (int) ((double) event.mouseButton.y / ((double) cell_height));
 
@@ -112,7 +113,7 @@ void Field::draw_accessible_moves(int x_board, int y_board, double cell_size)
 
     Figure *current_figure = game_field.get_figure(8 * x_board + y_board);
 
-    window.clear();
+    window.clear(background_color);
     draw_disposition();
 
     for (int i = 0; i < game_field.get_rows(); i++)
@@ -152,10 +153,11 @@ void Field::draw_accessible_moves(int x_board, int y_board, double cell_size)
     window.display();
 }
 
-void Field::display_current_disposition()
+void Field::display_current_disposition(bool color)
 {
-    window.clear();
+    window.clear(background_color);
     draw_disposition();
+    draw_move(color);
     window.display();
 }
 
@@ -167,4 +169,16 @@ void Field::print_debug()
 FiguresMatrix& Field::get_figures_matrix()
 {
     return game_field;
+}
+
+void Field::draw_move(bool color)
+{
+    sf::Color color_circle = color ? sf::Color::Black : sf::Color::White;
+
+    double radius = (window_width - board_width) * 0.25;
+
+    sf::CircleShape move(radius);
+    move.setPosition(board_width + radius * 4 / 5, radius * 2);
+
+    window.draw(move);
 }

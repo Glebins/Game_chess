@@ -1,6 +1,8 @@
 #ifndef CHESS_MODEL_H
 #define CHESS_MODEL_H
 
+#include <sstream>
+
 #include <SFML/Graphics.hpp>
 
 #include "Player.h"
@@ -36,6 +38,7 @@ class Model {
 
 private:
     States state;
+    Situations situation;
 
     Player player_whites;
     Player player_blacks;
@@ -49,6 +52,10 @@ private:
     void handle_press_with_figure_activated(int x_board, int y_board);
     void handle_press_without_figure_activated(int x_board, int y_board);
 
+    bool is_check();
+    bool is_checkmate();
+    bool is_stalemate();
+
     bool is_figure_activated;
 
     // std::pair<Player, Figure> get_figure_by_position(std::string position);
@@ -60,10 +67,17 @@ public:
 
     States get_state() const;
     std::string get_game_history() const;
-    // Situations get_situation() const;
+    Situations get_situation() const;
+
+    void set_game_history(std::string game_history_from_file);
+
+    Player get_player_whites();
+    Player get_player_blacks();
 
     void make_move(int from, int to);
     void handle_mouse_press(int x_board, int y_board);
+
+    void analyze_the_board();
 
 };
 

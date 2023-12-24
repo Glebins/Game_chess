@@ -81,13 +81,14 @@ void Controller::print_debug() const
 void Controller::run()
 {
     // start_new_game();
-    window.clear();
+    window.clear(view_field.get_background_color());
     view_field.draw_disposition();
+
     window.display();
 
     while (window.isOpen())
     {
-        Event event{};
+        Event event {};
 
         while (window.pollEvent(event))
         {
@@ -105,24 +106,39 @@ void Controller::run()
             else if (Keyboard::isKeyPressed(Keyboard::LControl) and Keyboard::isKeyPressed(Keyboard::S))
             {
                 process_saving_to_file();
+            }
 
+            else if (Keyboard::isKeyPressed(Keyboard::LControl) and Keyboard::isKeyPressed(Keyboard::O))
+            {
+                process_opening_file();
             }
         }
     }
 }
 
 
+bool Controller::is_mouse_within_board(double mouse_x, double mouse_y)
+{
+    if (mouse_x < view_field.get_board_width() and mouse_y < view_field.get_board_height())
+        return true;
+    else return false;
+}
+
 void Controller::process_mouse_pressing(sf::Event event)
 {
     // unsigned cell_size = window.getSize().x / cols;
     int x_board = (int) ((double) event.mouseButton.x / ((double) view_field.get_cell_size()));
     int y_board = (int) ((double) event.mouseButton.y / ((double) view_field.get_cell_size()));
+
+    if (!is_mouse_within_board(x_board, y_board))
+        return;
+
     model.handle_mouse_press(y_board, x_board);
 }
 
 void Controller::process_saving_to_file()
 {
-    std::cout << "Saving";
+    std::cout << "Saving...\n";
     std::string filePath = show_save_file_dialog();
     if (!filePath.empty()) {
         // Save content to the selected file
@@ -137,18 +153,74 @@ void Controller::process_saving_to_file()
     }
 }
 
+void Controller::process_opening_file()
+{
+    std::cout << "Opening...\n";
+
+    std::string game_history_from_file;
+
+    std::string filePath = show_open_file_dialog();
+    if (!filePath.empty()) {
+        // Perform actions with the selected file, e.g., display its content
+        std::ifstream file(filePath);
+        if (file.is_open()) {
+            std::string line;
+            while (std::getline(file, line)) {
+                game_history_from_file += line;
+                game_history_from_file += "\n";
+            }
+            file.close();
+        } else {
+            std::cerr << "Error opening file\n";
+        }
+    }
+
+    model.set_game_history(game_history_from_file);
+}
+
 
 std::string Controller::show_save_file_dialog()
 {
     const char *filters[] = {"*.txt", "*.cpp", "*.h", "*.csv", "*.xml", "*.json", "*.md", "*.log", nullptr};
-    const char *filterDesc = "Text Files";
+    const char *filterDesc = "Chess Files";
+
+    auto now = std::chrono::system_clock::now();
+    std::time_t current_time = std::chrono::system_clock::to_time_t(now);
+    std::tm* time_info = std::localtime(&current_time);
+
+    std::string date_in_file_name = std::to_string(time_info->tm_mday) + "." +
+            std::to_string(time_info->tm_mon + 1) + "." + std::to_string(time_info->tm_year + 1900) +
+            "-" + std::to_string(time_info->tm_hour) + "." + std::to_string(time_info->tm_min);
+
+    std::string file_name = model.get_player_whites().get_name() + "-vs-" + model.get_player_blacks().get_name() +
+            "-" + date_in_file_name;
 
     char const *result = tinyfd_saveFileDialog(
             "Save File As",
-            "default.txt",
+            file_name.c_str(),
             sizeof(filters) / sizeof(filters[0]) - 1,
             filters,
             filterDesc);
+
+    if (result != nullptr) {
+        return result;
+    } else {
+        return ""; // User canceled the dialog
+    }
+}
+
+std::string Controller::show_open_file_dialog()
+{
+    const char *filters[] = {"*.txt", "*.cpp", "*.h", "*.csv", "*.xml", "*.json", "*.md", "*.log", nullptr};
+    const char *filterDesc = "Text Files";
+
+    char const *result = tinyfd_openFileDialog(
+            "Open File",
+            "",
+            sizeof(filters) / sizeof(filters[0]) - 1,
+            filters,
+            filterDesc,
+            0);
 
     if (result != nullptr) {
         return result;

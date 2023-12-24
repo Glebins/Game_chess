@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <cstring>
+#include <chrono>
+#include <ctime>
 
 #include "tinyfiledialogs.h"
 #include <fstream>
@@ -27,9 +29,14 @@ private:
     Model &model;
     RenderWindow &window;
 
+    bool is_mouse_within_board(double mouse_x, double mouse_y);
+
     void process_mouse_pressing(Event event);
     void process_saving_to_file();
+    void process_opening_file();
+
     std::string show_save_file_dialog();
+    std::string show_open_file_dialog();
 
 public:
     /* Controller(FiguresMatrix &fm, Field &f, std::string player_whites_name, std::string player_blacks_name,

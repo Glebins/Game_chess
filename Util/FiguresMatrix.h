@@ -23,6 +23,7 @@ public:
 
     void set_start_disposition();
     void move_figure(int from_position, int move_position);
+    void delete_all_figures();
 
     bool can_do_move(int from_position, int move_position);
 

@@ -10,6 +10,7 @@ Model::Model(Field &view_field1, std::string player_whites_name, std::string pla
     player_whites.set_rating(player_whites_rating);
 
     state = States::move_whites;
+    situation = Situations::nothing;
 
     is_figure_activated = false;
 
@@ -20,6 +21,11 @@ Model::Model(Field &view_field1, std::string player_whites_name, std::string pla
 States Model::get_state() const
 {
     return state;
+}
+
+Situations Model::get_situation() const
+{
+    return situation;
 }
 
 std::string Model::get_game_history() const
@@ -43,25 +49,29 @@ void Model::make_move(int from, int to)
         }
 
         std::cout << "\nmake move\n";
-        view_field.display_current_disposition();
+        view_field.display_current_disposition((state == States::move_whites) ? 1 : 0);
 
-        int row = 8 - to / 8;
-        char col = to % 8 + 'a';
+        int row_to = 8 - to / 8;
+        char col_to = to % 8 + 'a';
+        int row_from = 8 - from / 8;
+        char col_from = from % 8 + 'a';
 
         if (state == States::move_whites)
         {
-            game_history += "\n" + std::to_string(number_moves / 2 + 1);
+            game_history += (number_moves != 0 ? "\n" : "") + std::to_string(number_moves / 2 + 1) + ". ";
             state = States::move_blacks;
+            view_field.draw_move(0);
         }
 
         else if (state == States::move_blacks)
         {
             game_history += " ";
             state = States::move_whites;
+            view_field.draw_move(1);
         }
 
         game_history += figure_from_position->figure_to_symbol();
-        game_history += col + std::to_string(row);
+        game_history += col_from + std::to_string(row_from) + "," + col_to + std::to_string(row_to);
 
         number_moves++;
 
@@ -114,4 +124,118 @@ void Model::handle_press_with_figure_activated(int x_board, int y_board)
     }
 
     make_move(pos_from, pos_to);
+}
+
+void Model::set_game_history(std::string game_history_from_file)
+{
+    game_field.delete_all_figures();
+    game_field.set_start_disposition();
+    state = States::move_whites;
+    situation = Situations::nothing;
+    game_history = std::move(game_history_from_file);
+
+    std::istringstream iss(game_history);
+    std::string line;
+
+    while (std::getline(iss, line, '\n'))
+    {
+        if (line.empty())
+            continue;
+
+        size_t first_space = line.find(' ');
+        size_t last_space = line.rfind(' ');
+
+        if (first_space == last_space)
+        {
+            std::string move = line.substr(first_space + 1);
+
+            int col_from = move[1] - 'a';
+            int row_from = 8 - (move[2] - '0');
+
+            int col_to = move[4] - 'a';
+            int row_to = 8 - (move[5] - '0');
+
+            make_move(8 * row_from + col_from, 8 * row_to + col_to);
+        }
+
+        else
+        {
+            std::string move_1 = line.substr(first_space + 1, last_space - first_space - 1);
+            std::string move_2 = line.substr(last_space + 1);
+
+            int w_col_from = move_1[1] - 'a';
+            int w_row_from = 8 - (move_1[2] - '0');
+
+            int w_col_to = move_1[4] - 'a';
+            int w_row_to = 8 - (move_1[5] - '0');
+
+            int b_col_from = move_2[1] - 'a';
+            int b_row_from = 8 - (move_2[2] - '0');
+
+            int b_col_to = move_2[4] - 'a';
+            int b_row_to = 8 - (move_2[5] - '0');
+
+            make_move(8 * w_row_from + w_col_from, 8 * w_row_to + w_col_to);
+            make_move(8 * b_row_from + b_col_from, 8 * b_row_to + b_col_to);
+        }
+    }
+}
+
+Player Model::get_player_blacks()
+{
+    return player_blacks;
+}
+
+Player Model::get_player_whites()
+{
+    return player_whites;
+}
+
+
+
+
+bool Model::is_check()
+{
+    bool check_figures = (state == States::move_whites) ? 0 : 1;
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+
+        }
+    }
+}
+
+bool is_checkmate()
+{
+
+}
+
+bool is_stalemate()
+{
+
+}
+
+
+void Model::analyze_the_board()
+{
+    /* if (is_check())
+    {
+        if (is_checkmate())
+            situation = Situations::checkmate;
+        else
+        {
+            situation = Situations::check;
+            state = States::game_over;
+        }
+    }
+
+    else
+    {
+        if (is_stalemate())
+            situation = Situations::stalemate;
+        else
+            situation = Situations::nothing;
+    } */
 }

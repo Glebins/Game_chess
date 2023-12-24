@@ -24,7 +24,7 @@ int main()
     game.run();
     // view_field.draw_field();
 
-    game.print_debug();
+    // game.print_debug();
 
     return 0;
 }

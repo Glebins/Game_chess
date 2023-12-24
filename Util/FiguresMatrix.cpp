@@ -63,6 +63,19 @@ void FiguresMatrix::move_figure(int from_position, int move_position)
     data[from_position / 8][from_position % 8] = nullptr;
 }
 
+void FiguresMatrix::delete_all_figures()
+{
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            Figure *current_figure = get_figure(8 * i + j);
+            if (current_figure != nullptr)
+                delete current_figure;
+        }
+    }
+}
+
 bool FiguresMatrix::can_do_move(int from_position, int move_position)
 {
     Figure *figure = get_figure(from_position);
@@ -235,6 +248,8 @@ int FiguresMatrix::find_figure(Figure *figure) const
 
     throw std::out_of_range("Element wasn't found");
 }
+
+
 
 Figure* FiguresMatrix::get_figure(int position)
 {
