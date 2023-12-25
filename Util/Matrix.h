@@ -4,6 +4,9 @@
 #include <iostream>
 
 template <typename T>
+class MatrixIterator;
+
+template <typename T>
 class Matrix {
 
 protected:
@@ -11,6 +14,7 @@ protected:
     T **data;
 
 public:
+
     Matrix(int rows, int cols) : rows(rows), cols(cols)
     {
         data = new T* [rows];
@@ -143,6 +147,117 @@ public:
         throw std::out_of_range("Element wasn't found");
     }
 
+    T** begin() const
+    {
+        return data;
+    }
+
+    T** end() const
+    {
+        return data + rows;
+    }
+
+    Matrix<T> transpose() const
+    {
+        Matrix<T> result(cols, rows);
+
+        // Using iterators to iterate over the original matrix
+        for (auto row = begin(); row != end(); ++row)
+        {
+            for (size_t col = 0; col < cols; ++col)
+            {
+                result[col][row - begin()] = (*row)[col];
+            }
+        }
+
+        return result;
+    }
+
+    T* operator[](size_t index) const
+    {
+        return data[index];
+    }
+
+};
+
+
+
+
+
+
+
+
+
+template <typename T>
+class MatrixIterator {
+private:
+    Matrix<T>& matrix;
+    size_t row, col;
+
+public:
+    MatrixIterator(Matrix<T>& mat, size_t r, size_t c) : matrix(mat), row(r), col(c) {}
+
+    T& operator*() const
+    {
+        return matrix.data[row][col];
+    }
+
+    MatrixIterator& operator++()
+    {
+        ++col;
+        if (col == matrix.cols)
+        {
+            ++row;
+            col = 0;
+        }
+        return *this;
+    }
+
+    MatrixIterator& operator--() {
+        if (col == 0)
+        {
+            --row;
+            col = matrix.cols - 1;
+        }
+
+        else
+        {
+            --col;
+        }
+
+        return *this;
+    }
+
+    MatrixIterator operator+(size_t n) const
+    {
+        MatrixIterator temp = *this;
+        temp.col += n;
+        temp.row += temp.col / matrix.cols;
+        temp.col %= matrix.cols;
+        return temp;
+    }
+
+    MatrixIterator operator-(size_t n) const
+    {
+        MatrixIterator temp = *this;
+        temp.col -= n;
+        while (temp.col >= matrix.cols)
+        {
+            temp.col += matrix.cols;
+            --temp.row;
+        }
+        return temp;
+    }
+
+    bool operator==(const MatrixIterator& other) const
+    {
+        return (&matrix == &other.matrix) && (row == other.row) && (col == other.col);
+    }
+
+    bool operator!=(const MatrixIterator& other) const
+    {
+        return *this != other;
+    }
 };
 
 

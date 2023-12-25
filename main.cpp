@@ -5,6 +5,8 @@
 #include "View/Field.h"
 #include "Util/FiguresMatrix.h"
 
+#include "Util/Matrix.h"
+
 int main()
 {
     std::string name_whites = "James";
@@ -22,9 +24,56 @@ int main()
     Controller game(window, view_field, model);
 
     game.run();
-    // view_field.draw_field();
 
-    // game.print_debug();
+    /* Matrix<int> m(3, 3);
+
+    int value = 1;
+    for (auto row = m.begin(); row != m.end(); ++row) {
+        for (size_t col = 0; col < m.get_cols(); ++col) {
+            (*row)[col] = value++;
+        }
+    }
+
+    // Print the matrix
+    for (auto row : m) {
+        for (size_t col = 0; col < m.get_cols(); ++col) {
+            std::cout << row[col] << ' ';
+        }
+        std::cout << std::endl;
+    }
+
+    Matrix<int> m1 = m.transpose();
+
+    m1.print(); */
+
+
+    /* for (int i = 0; i < m.get_rows(); ++i) {
+        for (int j = 0; j < m.get_cols(); ++j) {
+            m.at(i, j) = i + j;
+        }
+    }
+
+    m.add_row();
+
+    m.at(3, 0) = 12;
+    m.at(3, 1) = 13;
+    m.at(3, 2) = 14;
+
+    m.add_column();
+
+    m.at(0, 3) = 20;
+    m.at(1, 3) = 21;
+    m.at(2, 3) = 22;
+    m.at(3, 3) = 23;
+
+    m.print();
+
+    m.delete_row(1);
+    m.delete_column(1);
+
+    m.print();
+
+    std::cout << m.find_element(2) << "\n\n"; */
 
     return 0;
 }
