@@ -27,6 +27,30 @@ FiguresMatrix::FiguresMatrix(int rows, int cols) : Matrix(rows, cols)
     } */
 }
 
+FiguresMatrix::FiguresMatrix(const FiguresMatrix &fm) : Matrix(fm.get_rows(), fm.get_cols())
+{
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            Figure * current_figure = fm.get_figure(8 * i + j);
+            if (current_figure != nullptr)
+            {
+                char symbol = current_figure->figure_to_symbol();
+                char color = (current_figure->get_color() == 0) ? 'W' : 'B';
+                std::string fig;
+                fig.push_back(symbol);
+                fig.push_back(color);
+
+                Figure *tmp = Figure().symbol_to_figure(fig);
+                data[i][j] = tmp;
+            }
+            else
+                data[i][j] = fm.data[i][j];
+        }
+    }
+}
+
 void FiguresMatrix::set_start_disposition()
 {
     for (int i = 0; i < rows; i++)
@@ -63,6 +87,18 @@ void FiguresMatrix::move_figure(int from_position, int move_position)
     data[from_position / 8][from_position % 8] = nullptr;
 }
 
+void FiguresMatrix::forcibly_move_figure(int from_position, int move_position)
+{
+    Figure *current_figure = get_figure(from_position);
+    Figure *figure_on_new_position = data[move_position / 8][move_position % 8];
+
+    if (figure_on_new_position != nullptr)
+        delete figure_on_new_position;
+
+    data[move_position / 8][move_position % 8] = current_figure;
+    data[from_position / 8][from_position % 8] = nullptr;
+}
+
 void FiguresMatrix::delete_all_figures()
 {
     for (int i = 0; i < rows; i++)
@@ -89,13 +125,6 @@ bool FiguresMatrix::can_do_move(int from_position, int move_position)
     int y0 = from_position % 8;
     int x1 = move_position / 8;
     int y1 = move_position % 8;
-
-    /* if (x0 > x1)
-    {
-        int tmp = x1;
-        x1 = x0;
-        x0 = tmp;
-    } */
 
     if (figure->get_name_of_figure() == "King")
     {
@@ -271,5 +300,127 @@ int FiguresMatrix::find_king(bool color) const
             }
         }
     }
+}
+
+
+std::vector<int> FiguresMatrix::array_moves(int position)
+{
+    std::vector<int> moves;
+    Figure *current_figure = get_figure(position);
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            int current_position = 8 * i + j;
+
+            if (can_do_move(position, current_position))
+                moves.push_back(current_position);
+        }
+    }
+
+    return moves;
+}
+
+
+
+
+
+bool FiguresMatrix::is_check(bool check_figures_color)
+{
+    int king_position = find_king(!check_figures_color);
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            int current_position = 8 * i + j;
+
+            Figure *current_figure = get_figure(current_position);
+            if (current_figure == nullptr)
+                continue;
+
+            if (current_figure->get_color() != check_figures_color)
+                continue;
+
+            if (can_do_move(current_position, king_position))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool FiguresMatrix::is_checkmate(bool check_figures_color)
+{
+    check_figures_color = !check_figures_color;
+    int king_position = find_king(check_figures_color);
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            int current_position = 8 * i + j;
+
+            Figure *current_figure = get_figure( current_position);
+            if (current_figure == nullptr)
+                continue;
+
+            if (current_figure->get_color() != check_figures_color)
+                continue;
+
+            std::vector<int> moves = array_moves(current_position);
+
+            for (int &current_move : moves)
+            {
+                FiguresMatrix fm = *this;
+
+                fm.forcibly_move_figure(current_position, current_move);
+                if (!fm.is_check(!check_figures_color))
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+bool FiguresMatrix::is_stalemate(bool check_figures_color)
+{
+    check_figures_color = !check_figures_color;
+    int king_position = find_king(check_figures_color);
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            int current_position = 8 * i + j;
+
+            Figure *current_figure = get_figure( current_position);
+            if (current_figure == nullptr)
+                continue;
+
+            if (current_figure->get_color() != check_figures_color)
+                continue;
+
+            std::vector<int> moves = array_moves(current_position);
+
+            for (int &current_move : moves)
+            {
+                FiguresMatrix fm = *this;
+
+                fm.forcibly_move_figure(current_position, current_move);
+
+                if (!fm.is_check(!check_figures_color))
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
 }
 

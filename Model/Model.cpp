@@ -18,6 +18,17 @@ Model::Model(Field &view_field1, std::string player_whites_name, std::string pla
     game_history = "";
 }
 
+void Model::restart()
+{
+    state = States::move_whites;
+    situation = Situations::nothing;
+
+    is_figure_activated = false;
+
+    number_moves = 0;
+    game_history = "";
+}
+
 States Model::get_state() const
 {
     return state;
@@ -36,6 +47,7 @@ std::string Model::get_game_history() const
 void Model::make_move(int from, int to)
 {
     Figure *figure_from_position = game_field.get_figure(from);
+    Figure *figure_on_new_position = game_field.get_figure(to);
 
     if ((state == States::move_whites and figure_from_position->get_color() == 0) or
         (state == States::move_blacks and figure_from_position->get_color() == 1))
@@ -48,8 +60,11 @@ void Model::make_move(int from, int to)
             return;
         }
 
+        if (figure_on_new_position != nullptr and figure_on_new_position->figure_to_symbol() == 'k')
+            state = States::game_over;
+
         std::cout << "\nmake move\n";
-        view_field.display_current_disposition((state == States::move_whites) ? 1 : 0);
+        process_drawing();
 
         int row_to = 8 - to / 8;
         char col_to = to % 8 + 'a';
@@ -60,14 +75,12 @@ void Model::make_move(int from, int to)
         {
             game_history += (number_moves != 0 ? "\n" : "") + std::to_string(number_moves / 2 + 1) + ". ";
             state = States::move_blacks;
-            // view_field.draw_side_panel(0);
         }
 
         else if (state == States::move_blacks)
         {
             game_history += " ";
             state = States::move_whites;
-            // view_field.draw_side_panel(1);
         }
 
         game_history += figure_from_position->figure_to_symbol();
@@ -198,74 +211,106 @@ Player Model::get_player_whites()
 
 
 
-bool Model::is_check()
+
+void Model::analyze_the_board(bool color)
 {
-    bool check_figures_color = (state == States::move_whites) ? 0 : 1;
-
-    int king_position = game_field.find_king(!check_figures_color);
-
-    for (int i = 0; i < rows; i++)
+    if (game_field.is_check(color))
     {
-        for (int j = 0; j < cols; j++)
+        if (game_field.is_checkmate(color))
         {
-            Figure *current_figure = game_field.get_figure(8 * i + j);
-            if (current_figure == nullptr)
-                continue;
-
-            if (current_figure->get_color() != check_figures_color)
-                continue;
-
-            if (game_field.can_do_move(8 * i + j, king_position))
-                return true;
-        }
-    }
-}
-
-bool Model::is_checkmate()
-{
-    bool check_figures_color = (state == States::move_whites) ? 0 : 1;
-    int king_position = game_field.find_king(!check_figures_color);
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            Figure *current_figure = game_field.get_figure(8 * i + j);
-            if (current_figure == nullptr)
-                continue;
-
-            if (current_figure->get_color() != check_figures_color)
-                continue;
-
-
-        }
-    }
-}
-
-bool Model::is_stalemate()
-{
-
-}
-
-
-void Model::analyze_the_board()
-{
-    /* if (is_check())
-    {
-        if (is_checkmate())
             situation = Situations::checkmate;
+            state = States::game_over;
+        }
+
         else
         {
             situation = Situations::check;
-            state = States::game_over;
         }
     }
 
     else
     {
-        if (is_stalemate())
+        if (game_field.is_stalemate(color))
+        {
             situation = Situations::stalemate;
+            state = States::game_over;
+        }
         else
             situation = Situations::nothing;
-    } */
+    }
+}
+
+void Model::print_situation()
+{
+    std::cout << "\nSituation = ";
+
+    switch (situation)
+    {
+        case Situations::nothing:
+            std::cout << "nothing";
+            break;
+
+        case Situations::check:
+            std::cout << "check";
+            break;
+
+        case Situations::checkmate:
+            std::cout << "checkmate";
+            break;
+
+        case Situations::stalemate:
+            std::cout << "stalemate";
+            break;
+    }
+
+    std::cout << "\n";
+}
+
+
+void Model::draw_situation_if_needed(bool current_move_color)
+{
+    bool color = (state == States::move_whites) ? 1 : 0;
+
+    analyze_the_board(color);
+    Situations sit_1 = situation;
+
+    analyze_the_board(!color);
+    Situations sit_2 = situation;
+
+    if (sit_1 == Situations::stalemate or sit_2 == Situations::stalemate)
+    {
+        situation = Situations::stalemate;
+
+        view_field.draw_stalemate();
+    }
+
+    else if (sit_1 == Situations::checkmate or sit_2 == Situations::checkmate)
+    {
+        situation = Situations::checkmate;
+
+        view_field.draw_checkmate((sit_1 == Situations::checkmate) == (color));
+    }
+
+    else if (sit_1 == Situations::check or sit_2 == Situations::check)
+    {
+        situation = Situations::check;
+
+        view_field.draw_check((sit_1 == Situations::check) == (color));
+    }
+}
+
+
+void Model::process_drawing()
+{
+    bool next_move_color = (state == States::move_whites) ? 1 : 0;
+
+    view_field.clear_screen();
+
+    view_field.display_current_disposition(next_move_color);
+    draw_situation_if_needed(next_move_color);
+
+    if (state == States::game_over)
+        view_field.draw_game_over();
+
+    view_field.display_elements();
 }

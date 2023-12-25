@@ -42,6 +42,13 @@ public:
     FiguresMatrix &get_figures_matrix();
 
     void print_debug();
+    void draw_check(bool color_win);
+    void draw_checkmate(bool color_win);
+    void draw_stalemate();
+    void draw_game_over();
+
+    void clear_screen();
+    void display_elements();
 
     int get_cols() const { return cols; }
     int get_rows() const { return rows; }

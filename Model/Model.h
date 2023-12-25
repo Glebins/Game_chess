@@ -52,10 +52,6 @@ private:
     void handle_press_with_figure_activated(int x_board, int y_board);
     void handle_press_without_figure_activated(int x_board, int y_board);
 
-    bool is_check();
-    bool is_checkmate();
-    bool is_stalemate();
-
     bool is_figure_activated;
 
     // std::pair<Player, Figure> get_figure_by_position(std::string position);
@@ -70,6 +66,7 @@ public:
     Situations get_situation() const;
 
     void set_game_history(std::string game_history_from_file);
+    void restart();
 
     Player get_player_whites();
     Player get_player_blacks();
@@ -77,7 +74,11 @@ public:
     void make_move(int from, int to);
     void handle_mouse_press(int x_board, int y_board);
 
-    void analyze_the_board();
+    void draw_situation_if_needed(bool current_move_color);
+
+    void process_drawing();
+    void analyze_the_board(bool color);
+    void print_situation();
 
 };
 

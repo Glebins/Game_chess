@@ -34,6 +34,7 @@ private:
     void process_mouse_pressing(Event event);
     void process_saving_to_file();
     void process_opening_file();
+    void process_starting_new_game();
 
     std::string show_save_file_dialog();
     std::string show_open_file_dialog();

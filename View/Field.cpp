@@ -159,10 +159,8 @@ void Field::draw_accessible_moves(int x_board, int y_board, double cell_size)
 
 void Field::display_current_disposition(bool color)
 {
-    window.clear(background_color);
     draw_disposition();
     draw_side_panel(color);
-    window.display();
 }
 
 void Field::print_debug()
@@ -216,5 +214,93 @@ void Field::display_accessible_moves_and_side_panel(int x_board, int y_board, do
     draw_accessible_moves(x_board, y_board, cell_size);
     draw_side_panel(color);
 
+    window.display();
+}
+
+void Field::draw_check(bool color_win)
+{
+    sf::Text check_label;
+    sf::Font font;
+    font.loadFromFile("../Pictures/arial.ttf");
+
+    double radius = (window_width - board_width) * 0.1;
+
+    std::string label = ((color_win) ? "Blacks" : "Whites");
+    label += " checked";
+
+    check_label.setCharacterSize(40);
+    check_label.setFont(font);
+    check_label.setFillColor(sf::Color::White);
+    check_label.setString(label);
+    check_label.setPosition(board_width + radius * 4 / 5, radius * 7);
+
+    window.draw(check_label);
+}
+
+void Field::draw_checkmate(bool color_win)
+{
+    sf::Text checkmate_label;
+    sf::Font font;
+    font.loadFromFile("../Pictures/arial.ttf");
+
+    double radius = (window_width - board_width) * 0.1;
+
+    std::string label = ((color_win) ? "Blacks" : "Whites");
+    label += " checkmated";
+
+    checkmate_label.setCharacterSize(40);
+    checkmate_label.setFont(font);
+    checkmate_label.setFillColor(sf::Color::White);
+    checkmate_label.setString(label);
+    checkmate_label.setPosition(board_width + radius * 4 / 5, radius * 7);
+
+    window.draw(checkmate_label);
+}
+
+void Field::draw_stalemate()
+{
+    sf::Text stalemate_label;
+    sf::Font font;
+    font.loadFromFile("../Pictures/arial.ttf");
+
+    double radius = (window_width - board_width) * 0.1;
+
+    std::string label = "There is a stalemate";
+
+    stalemate_label.setCharacterSize(40);
+    stalemate_label.setFont(font);
+    stalemate_label.setFillColor(sf::Color::White);
+    stalemate_label.setString(label);
+    stalemate_label.setPosition(board_width + radius * 4 / 5, radius * 7);
+
+    window.draw(stalemate_label);
+}
+
+void Field::draw_game_over()
+{
+    sf::Text game_over;
+    sf::Font font;
+    font.loadFromFile("../Pictures/arial.ttf");
+
+    double radius = (window_width - board_width) * 0.1;
+
+    std::string label = "Game over";
+
+    game_over.setCharacterSize(50);
+    game_over.setFont(font);
+    game_over.setFillColor(sf::Color::Magenta);
+    game_over.setString(label);
+    game_over.setPosition(board_width + radius * 4 / 5, radius * 10);
+
+    window.draw(game_over);
+}
+
+void Field::clear_screen()
+{
+    window.clear(background_color);
+}
+
+void Field::display_elements()
+{
     window.display();
 }

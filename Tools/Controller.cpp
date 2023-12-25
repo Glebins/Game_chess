@@ -113,6 +113,11 @@ void Controller::run()
             {
                 process_opening_file();
             }
+
+            else if (Keyboard::isKeyPressed(Keyboard::LControl) and Keyboard::isKeyPressed(Keyboard::R))
+            {
+                process_starting_new_game();
+            }
         }
     }
 }
@@ -131,11 +136,24 @@ void Controller::process_mouse_pressing(sf::Event event)
     int x_board = (int) ((double) event.mouseButton.x / ((double) view_field.get_cell_size()));
     int y_board = (int) ((double) event.mouseButton.y / ((double) view_field.get_cell_size()));
 
-    if (!is_mouse_within_board(x_board, y_board))
+    if (!is_mouse_within_board(event.mouseButton.x, event.mouseButton.y))
         return;
 
-    model.handle_mouse_press(y_board, x_board);
+    if (model.get_state() != States::game_over)
+        model.handle_mouse_press(y_board, x_board);
 }
+
+void Controller::process_starting_new_game()
+{
+    game_field.delete_all_figures();
+    game_field.set_start_disposition();
+    model.restart();
+    run();
+}
+
+
+
+
 
 void Controller::process_saving_to_file()
 {
