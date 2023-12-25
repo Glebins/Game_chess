@@ -251,9 +251,25 @@ int FiguresMatrix::find_figure(Figure *figure) const
 
 
 
-Figure* FiguresMatrix::get_figure(int position)
+Figure* FiguresMatrix::get_figure(int position) const
 {
     return at(position / 8, position % 8);
 }
 
+
+int FiguresMatrix::find_king(bool color) const
+{
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            Figure *current_figure = get_figure(8 * i + j);
+            if (current_figure != nullptr and !strcmp(current_figure->get_name_of_figure().c_str(), "King") and
+                current_figure->get_color() == color)
+            {
+                return 8 * i + j;
+            }
+        }
+    }
+}
 

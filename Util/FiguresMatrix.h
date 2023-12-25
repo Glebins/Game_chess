@@ -28,8 +28,9 @@ public:
     bool can_do_move(int from_position, int move_position);
 
     int find_figure(Figure *figure) const;
+    int find_king(bool color) const;
 
-    Figure *get_figure(int position);
+    Figure *get_figure(int position) const;
 
     ~FiguresMatrix() = default;
 

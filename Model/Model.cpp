@@ -60,14 +60,14 @@ void Model::make_move(int from, int to)
         {
             game_history += (number_moves != 0 ? "\n" : "") + std::to_string(number_moves / 2 + 1) + ". ";
             state = States::move_blacks;
-            view_field.draw_move(0);
+            // view_field.draw_side_panel(0);
         }
 
         else if (state == States::move_blacks)
         {
             game_history += " ";
             state = States::move_whites;
-            view_field.draw_move(1);
+            // view_field.draw_side_panel(1);
         }
 
         game_history += figure_from_position->figure_to_symbol();
@@ -97,7 +97,11 @@ void Model::handle_press_without_figure_activated(int x_board, int y_board)
             (current_figure->get_color() == 0 and state == States::move_blacks))
             return;
 
-        view_field.draw_accessible_moves(x_board, y_board, view_field.get_cell_size());
+        // view_field.draw_accessible_moves(x_board, y_board, view_field.get_cell_size());
+        // view_field.draw_move((state == States::move_whites) ? 0 : 1);
+        bool color_move = (state == States::move_whites) ? 0 : 1;
+        view_field.display_accessible_moves_and_side_panel(x_board, y_board, view_field.get_cell_size(),
+                                                           color_move);
         is_figure_activated = true;
 
         std::cout << "\n-----------------------\n" << x_board << " " << y_board << " " <<
@@ -196,23 +200,49 @@ Player Model::get_player_whites()
 
 bool Model::is_check()
 {
-    bool check_figures = (state == States::move_whites) ? 0 : 1;
+    bool check_figures_color = (state == States::move_whites) ? 0 : 1;
+
+    int king_position = game_field.find_king(!check_figures_color);
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
+            Figure *current_figure = game_field.get_figure(8 * i + j);
+            if (current_figure == nullptr)
+                continue;
+
+            if (current_figure->get_color() != check_figures_color)
+                continue;
+
+            if (game_field.can_do_move(8 * i + j, king_position))
+                return true;
+        }
+    }
+}
+
+bool Model::is_checkmate()
+{
+    bool check_figures_color = (state == States::move_whites) ? 0 : 1;
+    int king_position = game_field.find_king(!check_figures_color);
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            Figure *current_figure = game_field.get_figure(8 * i + j);
+            if (current_figure == nullptr)
+                continue;
+
+            if (current_figure->get_color() != check_figures_color)
+                continue;
+
 
         }
     }
 }
 
-bool is_checkmate()
-{
-
-}
-
-bool is_stalemate()
+bool Model::is_stalemate()
 {
 
 }

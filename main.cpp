@@ -16,7 +16,7 @@ int main()
     sf::RenderWindow window;
 
     FiguresMatrix fm(8, 8);
-    Field view_field(window, fm);
+    Field view_field(window, fm, name_whites, name_blacks);
     Model model(view_field, name_whites, name_blacks,
                 rating_whites, rating_blacks);
     Controller game(window, view_field, model);

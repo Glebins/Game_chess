@@ -83,6 +83,7 @@ void Controller::run()
     // start_new_game();
     window.clear(view_field.get_background_color());
     view_field.draw_disposition();
+    view_field.draw_side_panel(0);
 
     window.display();
 

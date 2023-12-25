@@ -32,7 +32,7 @@ public:
         delete[] data;
     }
 
-    T& at(int i, int j)
+    T& at(int i, int j) const
     {
         if (i < 0 || i >= rows || j < 0 || j >= cols)
             throw std::out_of_range("Index out of bounds");

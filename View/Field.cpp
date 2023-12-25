@@ -1,6 +1,10 @@
 #include "Field.h"
 
-Field::Field(sf::RenderWindow &window1, FiguresMatrix &matrix) : game_field(matrix), window(window1)
+#include <utility>
+
+Field::Field(sf::RenderWindow &window1, FiguresMatrix &matrix, std::string player_1_name1,
+             std::string player_2_name1) : game_field(matrix), window(window1), player_1_name(std::move(player_1_name1)),
+             player_2_name(std::move(player_2_name1))
 { }
 
 // Field::Field(Field &&old_field) : game_field(old_field.game_field) { }
@@ -113,7 +117,7 @@ void Field::draw_accessible_moves(int x_board, int y_board, double cell_size)
 
     Figure *current_figure = game_field.get_figure(8 * x_board + y_board);
 
-    window.clear(background_color);
+    // window.clear(background_color);
     draw_disposition();
 
     for (int i = 0; i < game_field.get_rows(); i++)
@@ -150,14 +154,14 @@ void Field::draw_accessible_moves(int x_board, int y_board, double cell_size)
 
     window.draw(circle);
 
-    window.display();
+    // window.display();
 }
 
 void Field::display_current_disposition(bool color)
 {
     window.clear(background_color);
     draw_disposition();
-    draw_move(color);
+    draw_side_panel(color);
     window.display();
 }
 
@@ -171,14 +175,46 @@ FiguresMatrix& Field::get_figures_matrix()
     return game_field;
 }
 
-void Field::draw_move(bool color)
+void Field::draw_side_panel(bool color)
 {
-    sf::Color color_circle = color ? sf::Color::Black : sf::Color::White;
+    sf::Color color_circle = (color) ? sf::Color::Black : sf::Color::White;
 
-    double radius = (window_width - board_width) * 0.25;
+    double radius = (window_width - board_width) * 0.1;
 
-    sf::CircleShape move(radius);
-    move.setPosition(board_width + radius * 4 / 5, radius * 2);
+    sf::CircleShape move_circle(radius);
+    move_circle.setFillColor(color_circle);
+    move_circle.setPosition(board_width + radius * 4 / 5, radius * 2);
 
-    window.draw(move);
+    sf::Text move_label;
+    sf::Font font;
+    font.loadFromFile("../Pictures/arial.ttf");
+
+    move_label.setCharacterSize(50);
+    move_label.setFont(font);
+    move_label.setFillColor(sf::Color::White);
+    move_label.setString("Move");
+    move_label.setPosition(board_width + radius * 19 / 5, radius * 2);
+
+    std::string players_poster = player_1_name + " vs " + player_2_name;
+
+    sf::Text players;
+    players.setCharacterSize(20);
+    players.setFont(font);
+    players.setFillColor(sf::Color::White);
+    players.setString(players_poster);
+    players.setPosition(board_width + radius * 4 / 5, radius * 5);
+
+    window.draw(move_circle);
+    window.draw(move_label);
+    window.draw(players);
+}
+
+void Field::display_accessible_moves_and_side_panel(int x_board, int y_board, double cell_size, bool color)
+{
+    window.clear(background_color);
+
+    draw_accessible_moves(x_board, y_board, cell_size);
+    draw_side_panel(color);
+
+    window.display();
 }
