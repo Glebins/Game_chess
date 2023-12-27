@@ -1,6 +1,8 @@
 #ifndef GAME_CHESS_FIGURESMATRIX_H
 #define GAME_CHESS_FIGURESMATRIX_H
 
+#include <thread>
+
 #include "../Model/Figure.h"
 #include "Matrix.h"
 
@@ -35,9 +37,13 @@ public:
 
     Figure *get_figure(int position) const;
 
-    bool is_check(bool check_figures_color);
-    bool is_checkmate(bool check_figures_color);
-    bool is_stalemate(bool check_figures_color);
+    void is_check(bool check_figures_color, int start, int end, std::vector<bool>& results);
+    void is_checkmate(bool check_figures_color, int start, int end, std::vector<bool>& results);
+    void is_stalemate(bool check_figures_color, int start, int end, std::vector<bool>& results);
+
+    bool is_check_multi_threading(bool check_figures_color);
+    bool is_checkmate_multi_threading(bool check_figures_color);
+    bool is_stalemate_multi_threading(bool check_figures_color);
 
     ~FiguresMatrix() = default;
 

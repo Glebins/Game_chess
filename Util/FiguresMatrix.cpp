@@ -12,19 +12,6 @@ FiguresMatrix::FiguresMatrix(int rows, int cols) : Matrix(rows, cols)
             data[i][j] = tmp;
         }
     }
-
-    /* matrix = new Figure** [rows];
-
-    for (int i = 0; i < rows; i++)
-    {
-        data[i] = new Figure* [cols];
-
-        for (int j = 0; j < cols; j++)
-        {
-            Figure* tmp = Figure().symbol_to_figure(disposition[i][j]);
-            matrix[i][j] = tmp;
-        }
-    } */
 }
 
 FiguresMatrix::FiguresMatrix(const FiguresMatrix &fm) : Matrix(fm.get_rows(), fm.get_cols())
@@ -66,7 +53,6 @@ void FiguresMatrix::set_start_disposition()
 void FiguresMatrix::move_figure(int from_position, int move_position)
 {
     Figure *current_figure = get_figure(from_position);
-    std::cout << current_figure->get_name_of_figure() << "\n\n";
 
     if (!can_do_move(from_position, move_position))
     {
@@ -194,8 +180,6 @@ bool FiguresMatrix::can_do_move(int from_position, int move_position)
             difference_x -= sign_x;
             difference_y -= sign_y;
         }
-
-        std::cout << "\n";
     }
 
     else if (figure->get_name_of_figure() == "Queen")
@@ -326,12 +310,16 @@ std::vector<int> FiguresMatrix::array_moves(int position)
 
 
 
-bool FiguresMatrix::is_check(bool check_figures_color)
+void FiguresMatrix::is_check(bool check_figures_color, int start, int end, std::vector<bool>& results)
 {
     int king_position = find_king(!check_figures_color);
 
-    for (int i = 0; i < rows; i++)
+    bool verdict;
+
+    for (int i = start; i < end; i++)
     {
+        verdict = false;
+
         for (int j = 0; j < cols; j++)
         {
             int current_position = 8 * i + j;
@@ -344,83 +332,207 @@ bool FiguresMatrix::is_check(bool check_figures_color)
                 continue;
 
             if (can_do_move(current_position, king_position))
-                return true;
+                verdict = true;
         }
+
+        results[i] = verdict;
+    }
+}
+
+void FiguresMatrix::is_checkmate(bool check_figures_color, int start, int end, std::vector<bool>& results)
+{
+    check_figures_color = !check_figures_color;
+
+    bool verdict;
+
+    for (int i = start; i < end; i++)
+    {
+        verdict = true;
+
+        for (int j = 0; j < cols; j++)
+        {
+            int current_position = 8 * i + j;
+
+            Figure *current_figure = get_figure( current_position);
+            if (current_figure == nullptr)
+                continue;
+
+            if (current_figure->get_color() != check_figures_color)
+                continue;
+
+            std::vector<int> moves = array_moves(current_position);
+
+            for (int &current_move : moves)
+            {
+                FiguresMatrix fm = *this;
+
+                fm.forcibly_move_figure(current_position, current_move);
+                if (!fm.is_check_multi_threading(!check_figures_color))
+                {
+                    verdict = false;
+                }
+            }
+        }
+
+        results[i] = verdict;
+    }
+}
+
+void FiguresMatrix::is_stalemate(bool check_figures_color, int start, int end, std::vector<bool>& results)
+{
+    check_figures_color = !check_figures_color;
+
+    bool verdict;
+
+    for (int i = start; i < end; i++)
+    {
+        verdict = true;
+
+        for (int j = 0; j < cols; j++)
+        {
+            int current_position = 8 * i + j;
+
+            Figure *current_figure = get_figure( current_position);
+            if (current_figure == nullptr)
+                continue;
+
+            if (current_figure->get_color() != check_figures_color)
+                continue;
+
+            std::vector<int> moves = array_moves(current_position);
+
+            for (int &current_move : moves)
+            {
+                FiguresMatrix fm = *this;
+
+                fm.forcibly_move_figure(current_position, current_move);
+
+                if (!fm.is_check_multi_threading(!check_figures_color))
+                {
+                    verdict = false;
+                    goto end;
+                }
+            }
+        }
+
+        end:
+        results[i] = verdict;
+    }
+}
+
+
+
+
+bool FiguresMatrix::is_check_multi_threading(bool check_figures_color)
+{
+    int iterations = rows;
+    int num_threads = rows / 2;
+
+    std::vector<bool> results(iterations, false);
+
+    std::thread threads[num_threads];
+
+    for (int i = 0; i < num_threads; i++)
+    {
+        int start = i * (iterations / num_threads);
+        int end = (i + 1) * (iterations / num_threads);
+
+        if (i == num_threads - 1)
+        {
+            end = iterations;
+        }
+
+        threads[i] = std::thread([this, check_figures_color, start, end, &res = results]() {
+            this->is_check(check_figures_color, start, end, res);
+        });
+    }
+
+    for (int i = 0; i < num_threads; i++)
+    {
+        threads[i].join();
+    }
+
+    for (int i = 0; i < iterations; i++)
+    {
+        if (results[i])
+            return true;
     }
 
     return false;
 }
 
-bool FiguresMatrix::is_checkmate(bool check_figures_color)
+bool FiguresMatrix::is_checkmate_multi_threading(bool check_figures_color)
 {
-    check_figures_color = !check_figures_color;
-    int king_position = find_king(check_figures_color);
+    int iterations = rows;
+    int num_threads = rows / 2;
 
-    for (int i = 0; i < rows; i++)
+    std::vector<bool> results(iterations, false);
+
+    std::thread threads[num_threads];
+
+    for (int i = 0; i < num_threads; i++)
     {
-        for (int j = 0; j < cols; j++)
+        int start = i * (iterations / num_threads);
+        int end = (i + 1) * (iterations / num_threads);
+
+        if (i == num_threads - 1)
         {
-            int current_position = 8 * i + j;
-
-            Figure *current_figure = get_figure( current_position);
-            if (current_figure == nullptr)
-                continue;
-
-            if (current_figure->get_color() != check_figures_color)
-                continue;
-
-            std::vector<int> moves = array_moves(current_position);
-
-            for (int &current_move : moves)
-            {
-                FiguresMatrix fm = *this;
-
-                fm.forcibly_move_figure(current_position, current_move);
-                if (!fm.is_check(!check_figures_color))
-                {
-                    return false;
-                }
-            }
+            end = iterations;
         }
+
+        threads[i] = std::thread([this, check_figures_color, start, end, &res = results]() {
+            this->is_checkmate(check_figures_color, start, end, res);
+        });
+    }
+
+    for (int i = 0; i < num_threads; i++)
+    {
+        threads[i].join();
+    }
+
+    for (int i = 0; i < iterations; i++)
+    {
+        if (!results[i])
+            return false;
     }
 
     return true;
 }
 
-bool FiguresMatrix::is_stalemate(bool check_figures_color)
+bool FiguresMatrix::is_stalemate_multi_threading(bool check_figures_color)
 {
-    check_figures_color = !check_figures_color;
-    int king_position = find_king(check_figures_color);
+    int iterations = rows;
+    int num_threads = rows / 2;
 
-    for (int i = 0; i < rows; i++)
+    std::vector<bool> results(iterations, false);
+
+    std::thread threads[num_threads];
+
+    for (int i = 0; i < num_threads; i++)
     {
-        for (int j = 0; j < cols; j++)
+        int start = i * (iterations / num_threads);
+        int end = (i + 1) * (iterations / num_threads);
+
+        if (i == num_threads - 1)
         {
-            int current_position = 8 * i + j;
-
-            Figure *current_figure = get_figure( current_position);
-            if (current_figure == nullptr)
-                continue;
-
-            if (current_figure->get_color() != check_figures_color)
-                continue;
-
-            std::vector<int> moves = array_moves(current_position);
-
-            for (int &current_move : moves)
-            {
-                FiguresMatrix fm = *this;
-
-                fm.forcibly_move_figure(current_position, current_move);
-
-                if (!fm.is_check(!check_figures_color))
-                {
-                    return false;
-                }
-            }
+            end = iterations;
         }
+
+        threads[i] = std::thread([this, check_figures_color, start, end, &res = results]() {
+            this->is_stalemate(check_figures_color, start, end, res);
+        });
+    }
+
+    for (int i = 0; i < num_threads; i++)
+    {
+        threads[i].join();
+    }
+
+    for (int i = 0; i < iterations; i++)
+    {
+        if (!results[i])
+            return false;
     }
 
     return true;
 }
-

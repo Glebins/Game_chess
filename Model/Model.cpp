@@ -56,14 +56,14 @@ void Model::make_move(int from, int to)
             game_field.move_figure(from, to);
         }
         catch (std::logic_error &e) {
-            std::cout << "can't\n";
+            // std::cout << "can't\n";
             return;
         }
 
         if (figure_on_new_position != nullptr and figure_on_new_position->figure_to_symbol() == 'k')
             state = States::game_over;
 
-        std::cout << "\nmake move\n";
+        // std::cout << "\nmake move\n";
         process_drawing();
 
         int row_to = 8 - to / 8;
@@ -116,9 +116,6 @@ void Model::handle_press_without_figure_activated(int x_board, int y_board)
         view_field.display_accessible_moves_and_side_panel(x_board, y_board, view_field.get_cell_size(),
                                                            color_move);
         is_figure_activated = true;
-
-        std::cout << "\n-----------------------\n" << x_board << " " << y_board << " " <<
-            current_figure->get_name_of_figure() << " " << current_figure->get_color() << "\n--------------\n";
 
         ActivatedFigure.x_board = x_board;
         ActivatedFigure.y_board = y_board;
@@ -214,9 +211,9 @@ Player Model::get_player_whites()
 
 void Model::analyze_the_board(bool color)
 {
-    if (game_field.is_check(color))
+    if (game_field.is_check_multi_threading(color))
     {
-        if (game_field.is_checkmate(color))
+        if (game_field.is_checkmate_multi_threading(color))
         {
             situation = Situations::checkmate;
             state = States::game_over;
@@ -230,7 +227,7 @@ void Model::analyze_the_board(bool color)
 
     else
     {
-        if (game_field.is_stalemate(color))
+        if (game_field.is_stalemate_multi_threading(color))
         {
             situation = Situations::stalemate;
             state = States::game_over;
