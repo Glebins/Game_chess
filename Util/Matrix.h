@@ -6,6 +6,14 @@
 template <typename T>
 class MatrixIterator;
 
+/**
+ * @brief Generic Matrix class template.
+ *
+ * The Matrix class template provides a generic implementation for a matrix
+ * with common operations such as element access, matrix manipulations, and printing.
+ *
+ * @tparam T Type of elements stored in the matrix.
+ */
 template <typename T>
 class Matrix {
 
@@ -14,7 +22,12 @@ protected:
     T **data;
 
 public:
-
+    /**
+     * Constructor
+     * @brief Creates matrix and allocates memory
+     * @param rows
+     * @param cols
+     */
     Matrix(int rows, int cols) : rows(rows), cols(cols)
     {
         data = new T* [rows];
@@ -22,6 +35,10 @@ public:
             data[i] = new T[cols];
     }
 
+    /**
+     * Destructor
+     * @brief free memory
+     */
     ~Matrix()
     {
         for (int i = 0; i < rows; i++)
@@ -29,6 +46,9 @@ public:
         delete[] data;
     }
 
+    /**
+     * @brief free memory from array of rows and cols
+     */
     void free_memory()
     {
         for (int i = 0; i < rows; i++)
@@ -36,6 +56,13 @@ public:
         delete[] data;
     }
 
+    /**
+     * @brief Returns or sets the element with given coordinates
+     * @param i
+     * @param j
+     * @throw std::out_of_range if there is no element with such position in the matrix
+     * @return reference on element with coordinates i, j
+     */
     T& at(int i, int j) const
     {
         if (i < 0 || i >= rows || j < 0 || j >= cols)
@@ -43,16 +70,27 @@ public:
         return data[i][j];
     }
 
+    /**
+     * @brief returns number of rows
+     * @return number of rows
+     */
     int get_rows() const
     {
         return rows;
     }
 
+    /**
+     * @brief returns number of cols
+     * @return number of cols
+     */
     int get_cols() const
     {
         return cols;
     }
 
+    /**
+     * @brief print the matrix to the standard (console) out
+     */
     void print() const
     {
         std::cout << "\n";
@@ -67,6 +105,9 @@ public:
         std::cout << "\n";
     }
 
+    /**
+     * @brief adds another row to the bottom of matrix
+     */
     void add_row()
     {
         T** new_data = new T* [rows + 1];
@@ -78,6 +119,9 @@ public:
         rows++;
     }
 
+    /**
+     * @brief adds another column to the right
+     */
     void add_column()
     {
         T** new_data = new T* [rows];
@@ -93,6 +137,11 @@ public:
         cols++;
     }
 
+    /**
+     * @brief delete given row
+     * @param row you want to delete
+     * @throw std::out_of_range if there is no so much rows in the matrix
+     */
     void delete_row(int row_to_delete)
     {
         if (row_to_delete >= rows or row_to_delete < 0)
@@ -111,6 +160,11 @@ public:
         rows--;
     }
 
+    /**
+     * @brief delete given column
+     * @throw std::out_of_range if there is no so much cols in the matrix
+     * @param col you want to delete
+     */
     void delete_column(int col_to_delete)
     {
         if (col_to_delete >= cols or col_to_delete < 0)
@@ -133,6 +187,12 @@ public:
         cols--;
     }
 
+    /**
+     * @brief find element in table
+     * @param elem
+     * @throw std::out_of_range if there is no such element in the matrix
+     * @return position of element in the matrix
+     */
     int find_element(T elem)
     {
         for (int i = 0; i < rows; i++)
@@ -147,16 +207,28 @@ public:
         throw std::out_of_range("Element wasn't found");
     }
 
+    /**
+     * @brief returns pointer to the beginning of data
+     * @return pointer to begin
+     */
     T** begin() const
     {
         return data;
     }
 
+    /**
+     * @brief returns pointer to the ending of data
+     * @return pointer to end
+     */
     T** end() const
     {
         return data + rows;
     }
 
+    /**
+     * @brief transpose the matrix
+     * @return transposed matrix
+     */
     Matrix<T> transpose() const
     {
         Matrix<T> result(cols, rows);
@@ -173,6 +245,12 @@ public:
         return result;
     }
 
+    /**
+     * @brief overloading [] operator to get element
+     * @param index
+     * @throw std::out_of_range if there is no such element in the matrix
+     * @return data by index
+     */
     T* operator[](size_t index) const
     {
         return data[index];
@@ -185,9 +263,14 @@ public:
 
 
 
-
-
-
+/**
+ * @brief Iterator class for the Matrix class.
+ *
+ * The MatrixIterator class provides an iterator for the Matrix class,
+ * allowing iteration over the elements of a matrix in a convenient way.
+ *
+ * @tparam T Type of elements stored in the matrix.
+ */
 template <typename T>
 class MatrixIterator {
 private:
@@ -195,13 +278,32 @@ private:
     size_t row, col;
 
 public:
+    /**
+     * @brief Constructor for MatrixIterator.
+     *
+     * @param mat Reference to the associated matrix.
+     * @param r Initial row index.
+     * @param c Initial column index.
+     */
     MatrixIterator(Matrix<T>& mat, size_t r, size_t c) : matrix(mat), row(r), col(c) {}
 
+    /**
+     * @brief Dereference operator.
+     *
+     * @return Reference to the element at the current iterator position.
+     */
     T& operator*() const
     {
         return matrix.data[row][col];
     }
 
+    /**
+     * @brief Pre-increment operator.
+     *
+     * Advances the iterator to the next element in the matrix.
+     *
+     * @return Reference to the updated iterator.
+     */
     MatrixIterator& operator++()
     {
         ++col;
@@ -213,6 +315,13 @@ public:
         return *this;
     }
 
+    /**
+     * @brief Pre-decrement operator.
+     *
+     * Moves the iterator to the previous element in the matrix.
+     *
+     * @return Reference to the updated iterator.
+     */
     MatrixIterator& operator--() {
         if (col == 0)
         {
@@ -228,6 +337,14 @@ public:
         return *this;
     }
 
+    /**
+     * @brief Addition operator.
+     *
+     * Advances the iterator by the specified number of positions.
+     *
+     * @param n Number of positions to advance.
+     * @return New iterator pointing to the updated position.
+     */
     MatrixIterator operator+(size_t n) const
     {
         MatrixIterator temp = *this;
@@ -237,6 +354,14 @@ public:
         return temp;
     }
 
+    /**
+     * @brief Subtraction operator.
+     *
+     * Moves the iterator back by the specified number of positions.
+     *
+     * @param n Number of positions to move back.
+     * @return New iterator pointing to the updated position.
+     */
     MatrixIterator operator-(size_t n) const
     {
         MatrixIterator temp = *this;
@@ -249,14 +374,26 @@ public:
         return temp;
     }
 
+    /**
+     * @brief Equality operator.
+     *
+     * @param other Another MatrixIterator to compare with.
+     * @return True if the iterators are equal, false otherwise.
+     */
     bool operator==(const MatrixIterator& other) const
     {
         return (&matrix == &other.matrix) && (row == other.row) && (col == other.col);
     }
 
+    /**
+     * @brief Inequality operator.
+     *
+     * @param other Another MatrixIterator to compare with.
+     * @return True if the iterators are not equal, false otherwise.
+     */
     bool operator!=(const MatrixIterator& other) const
     {
-        return *this != other;
+        return !(*this == other);
     }
 };
 
