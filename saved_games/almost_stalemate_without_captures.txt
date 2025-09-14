@@ -1,0 +1,11 @@
+1. pd2,d4 pe7,e5
+2. qd1,d2 pe5,e4
+3. qd2,f4 pf7,f5
+4. ph2,h3 bf8,b4
+5. nb1,d2 pd7,d6
+6. qf4,h2 bc8,e6
+7. pa2,a4 qd8,h4
+8. ra1,a3 pc7,c5
+9. ra3,g3 pf5,f4
+10. pf2,f3 be6,b3
+11. pd4,d5 bb4,a5

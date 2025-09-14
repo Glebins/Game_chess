@@ -1,0 +1,9 @@
+1. pc2,c4 ph7,h5
+2. ph2,h4 pa7,a5
+3. qd1,a4 ra8,a6
+4. qa4,a5 ra6,h6
+5. qa5,c7 pf7,f6
+6. qc7,d7 ke8,f7
+7. qd7,b7 qd8,d3
+8. qb7,b8 qd3,h7
+9. qb8,c8 kf7,g6
